@@ -2,8 +2,8 @@ import React from "react";
 import { Slot } from "@radix-ui/react-slot";
 
 const variantClasses = {
-  website: "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600",
-  default: "bg-primary text-primary-foreground hover:bg-primary/90",
+  default: "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90",
   destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
   outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
   secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
@@ -12,7 +12,7 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-  default: "h-10 px-4 py-2",
+  primary: "h-10 px-4 py-2",
   sm: "h-9 rounded-md px-3",
   lg: "h-11 rounded-md px-8",
   icon: "h-10 w-10",
@@ -24,8 +24,8 @@ const baseClasses =
 const Button = React.forwardRef(function Button(
   {
     className = "",
-    variant = "website",
-    size = "default",
+    variant = "default",
+    size = "primary",
     asChild = false,
     ...props
   },
@@ -34,8 +34,8 @@ const Button = React.forwardRef(function Button(
   const Comp = asChild ? Slot : "button";
   const finalClassName = [
     baseClasses,
-    variantClasses[variant] || variantClasses.default,
-    sizeClasses[size] || sizeClasses.default,
+    variantClasses[variant] || variantClasses.primary,
+    sizeClasses[size] || sizeClasses.primary,
     className,
   ]
     .filter(Boolean)
