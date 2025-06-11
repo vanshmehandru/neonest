@@ -190,7 +190,7 @@ const Homepage = () => {
               <Card key={index} className="hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <div
-                    className={`w-16 h-16 mx-auto rounded-full bg-${stage.color}-100 flex items-center justify-center mb-4`}
+                    className={`w-16 h-16 mx-auto rounded-full bg-${stage.color}-400 flex items-center justify-center mb-4`}
                   >
                     <stage.icon className={`w-8 h-8 text-${stage.color}-600`} />
                   </div>
