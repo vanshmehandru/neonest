@@ -9,17 +9,21 @@ const ToggleGroupContext = createContext({
   variant: "default",
 });
 
-const ToggleGroup = forwardRef(({ className = "", variant, size, children, ...props }, ref) => (
-  <ToggleGroupPrimitive.Root
-    ref={ref}
-    className={`flex items-center justify-center gap-1 ${className}`}
-    {...props}
-  >
-    <ToggleGroupContext.Provider value={{ variant, size }}>
-      {children}
-    </ToggleGroupContext.Provider>
-  </ToggleGroupPrimitive.Root>
-));
+const ToggleGroup = forwardRef(
+  ({ className = "", variant, size, type = "single", children, ...props }, ref) => (
+    <ToggleGroupPrimitive.Root
+      ref={ref}
+      type={type}
+      className={`flex items-center justify-center gap-1 ${className}`}
+      {...props}
+    >
+      <ToggleGroupContext.Provider value={{ variant, size }}>
+        {children}
+      </ToggleGroupContext.Provider>
+    </ToggleGroupPrimitive.Root>
+  )
+);
+
 
 ToggleGroup.displayName = "ToggleGroup";
 
