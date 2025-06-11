@@ -1,11 +1,13 @@
-import React from 'react'
+import React from 'react';
+import { Button } from './components/ui/Button';
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       starting neonest : homepage
+      <Button>Click me</Button>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;
