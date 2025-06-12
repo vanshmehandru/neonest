@@ -45,13 +45,13 @@ const Homepage = () => {
               </Button>
             </div>
             <div className="relative">
-              <Image
-                src="/placeholder.svg?height=400&width=600"
-                alt="Happy baby with parents"
-                width={600}
-                height={400}
-                className="mx-auto rounded-2xl shadow-2xl"
-              />
+             <Image
+  src="/public/baby_parents.jpeg" 
+  alt="Happy baby with parents"
+  width={600}
+  height={400}
+  className="mx-auto rounded-2xl shadow-2xl"
+/>
               <div className="absolute -top-4 -left-4 w-20 h-20 bg-yellow-200 rounded-full flex items-center justify-center animate-bounce">
                 <Heart className="w-8 h-8 text-yellow-600" />
               </div>

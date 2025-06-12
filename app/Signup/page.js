@@ -1,58 +1,11 @@
-'use client';
+import React from 'react'
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-export default function SignupPage() {
-  const router = useRouter();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleNext = (e) => {
-    e.preventDefault();
-    const query = new URLSearchParams({ name, email, password }).toString();
-    router.push(`/SignupBaby?${query}`);
-  };
-
+const page = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-yellow-100 to-pink-100">
-      <form onSubmit={handleNext} className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-center text-pink-600">Parent Signup</h1>
-
-        <input
-          type="text"
-          placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="mb-4 w-full px-4 py-2 border rounded-lg"
-        />
-        <input
-          type="email"
-          placeholder="Your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="mb-4 w-full px-4 py-2 border rounded-lg"
-        />
-        <input
-          type="password"
-          placeholder="Create Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="mb-6 w-full px-4 py-2 border rounded-lg"
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-pink-400 to-purple-500 text-white py-2 rounded-lg font-semibold"
-        >
-          Next
-        </button>
-      </form>
+    <div>
+      <p>hi</p>
     </div>
-  );
+  )
 }
 
+export default page
