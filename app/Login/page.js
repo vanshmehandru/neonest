@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -10,7 +9,7 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const res = await fetch('/api/login', {
+    const res = await fetch('https://api.example.com/login', {  // use real API URL
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -21,7 +20,7 @@ export default function Login() {
     if (data.success) {
       router.push('/dashboard');
     } else {
-      alert('Invalid login');
+      alert('Login failed!');
     }
   }
 
@@ -46,16 +45,3 @@ export default function Login() {
     </form>
   );
 }
-=======
-import React from 'react'
-
-const page = () => {
-  return (
-    <div>
-      i am login
-    </div>
-  )
-}
-
-export default page
->>>>>>> 144a7402b1b25ada820fb4606d8c66e727dfb545
