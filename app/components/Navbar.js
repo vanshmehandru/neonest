@@ -1,19 +1,19 @@
 "use client";
 
-import React from 'react';
-import { Baby } from 'lucide-react';
-import { Button } from './ui/Button';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React from "react";
+import { Baby } from "lucide-react";
+import { Button } from "./ui/Button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const tabs = [
-  { label: 'home', path: '/' },
-  { label: 'feeding', path: '/Feeding' },
-  { label: 'vaccines', path: '/Vaccines' },
-  { label: 'memories', path: '/memories' },
-  { label: 'resources', path: '/resources' },
-  { label: 'essentials', path: '/essentials' },
-  { label: 'faqs', path: '/faqs' }
+  { label: "home", path: "/" },
+  { label: "feeding", path: "/Feeding" },
+  { label: "vaccines", path: "/Vaccines" },
+  { label: "memories", path: "/Memories" },
+  { label: "resources", path: "/Resources" },
+  { label: "essentials", path: "/Essentials" },
+  { label: "faqs", path: "/Faqs" },
 ];
 
 const Navbar = () => {
@@ -41,7 +41,7 @@ const Navbar = () => {
                 href={path}
                 className={`transition-colors capitalize ${
                   pathname === path
-                    ? "text-pink-600 font-semibold"
+                    ? "text-pink-600"
                     : "text-gray-600 hover:text-pink-600"
                 }`}
               >
@@ -52,12 +52,19 @@ const Navbar = () => {
 
           {/* CTA */}
           <div className="hidden md:flex items-right mx-1">
-            <Button className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 mx-1 text-white">
-  Login
-</Button>
-<Button className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 mx-1 text-white">
-  Signup
-</Button>
+            <Button
+              asChild
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 mx-1 text-white"
+            >
+              <Link href="/Login">Login</Link>
+            </Button>
+
+            <Button
+              asChild
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 mx-1 text-white"
+            >
+              <Link href="/Signup">Signup</Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -66,4 +73,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

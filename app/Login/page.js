@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -45,3 +46,16 @@ export default function Login() {
     </form>
   );
 }
+=======
+import React from 'react'
+
+const page = () => {
+  return (
+    <div>
+      i am login
+    </div>
+  )
+}
+
+export default page
+>>>>>>> 144a7402b1b25ada820fb4606d8c66e727dfb545
