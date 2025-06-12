@@ -113,8 +113,8 @@ export default function MemoryVault() {
   const publicMemories = memories.filter((memory) => memory.isPublic)
 
   return (
-    <div className="space-y-8 p-6 max-w-7xl mx-auto"> {/* Adjusted overall padding and max-width */}
-      <div className="flex items-center justify-between mb-6"> {/* Adjusted margin-bottom */}
+    <div className="space-y-8 p-6 max-w-7xl mx-auto"> 
+      <div className="flex items-center justify-between mb-6"> 
         <div>
           <h2 className="text-3xl font-bold text-gray-800">Memory Vault</h2>
           <p className="text-gray-600 mt-1">Capture and share precious moments with your baby</p> {/* Adjusted margin-top */}
