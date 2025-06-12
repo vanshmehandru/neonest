@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
+import { Button } from "../components/ui/Button"
+import Input from "../components/ui/Input"
 import {
   ChevronDown,
   ChevronUp,
@@ -129,14 +129,14 @@ export default function Page() {
   })
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-6xl mx-auto py-8 px-4 space-y-8"> {/* Changed max-w-4xl to max-w-6xl */}
       <div className="text-center">
         <h2 className="text-4xl font-bold mb-4 text-gray-800">Frequently Asked Questions</h2>
-        <p className="text-xl text-gray-600">Find quick answers to common baby care questions</p>
+        <p className="text-xl text-gray-600 mb-8">Find quick answers to common baby care questions</p>
       </div>
 
       {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
@@ -170,10 +170,10 @@ export default function Page() {
       </div>
 
       {/* FAQ Section */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {filteredFAQs.map((category) => (
           <Card key={category.id} className="bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+            <CardHeader className="pb-0">
               <CardTitle className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-${category.color}-100`}>
                   <category.icon className={`w-5 h-5 text-${category.color}-600`} />
@@ -181,7 +181,7 @@ export default function Page() {
                 {category.title}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-6 pt-4">
               {category.faqs
                 .filter(
                   (faq) =>
@@ -192,13 +192,13 @@ export default function Page() {
                 .map((faq, index) => {
                   const isExpanded = expandedFAQ === `${category.id}-${index}`
                   return (
-                    <div key={index} className="border border-gray-200 rounded-lg">
+                    <div key={index} className="border border-gray-200 rounded-lg my-2">
                       <Button
                         variant="ghost"
                         onClick={() =>
                           setExpandedFAQ(isExpanded ? null : `${category.id}-${index}`)
                         }
-                        className="w-full justify-between p-4 h-auto text-left"
+                        className="w-full justify-between p-5 h-auto text-left"
                       >
                         <span className="font-medium">{faq.question}</span>
                         {isExpanded ? (
@@ -208,7 +208,7 @@ export default function Page() {
                         )}
                       </Button>
                       {isExpanded && (
-                        <div className="px-4 pb-4 text-gray-600">{faq.answer}</div>
+                        <div className="px-5 pb-5 text-gray-600">{faq.answer}</div>
                       )}
                     </div>
                   )
