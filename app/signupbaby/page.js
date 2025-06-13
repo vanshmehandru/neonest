@@ -162,6 +162,10 @@ export default function SignupBabyPage() {
           </div>
         ))}
 
+        <p className="text-center text-sm text-gray-500 mb-4">
+          At NeoNest, your data privacy is paramount. We are committed to keeping your information confidential and do not share it with third parties.
+        </p>
+
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-purple-400 to-pink-500 text-white py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
