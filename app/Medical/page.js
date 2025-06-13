@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import Input from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
+import ImportantContacts from "../components/ImportantContacts ";
 import Badge from "../components/ui/Badge";
 import {
   Plus,
@@ -191,11 +192,11 @@ export default function VaccineTracker() {
   })
 
   return (
-    <div className="p-6 space-y-6"> {/* Added padding to the main container */}
+    <div className="p-6 space-y-6"> 
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">Vaccine Tracker</h2>
-          <p className="text-gray-600">Keep track of your baby's vaccination schedule</p>
+          <h2 className="text-3xl font-bold text-gray-800">Medical Records: Vaccines & Important Contacts</h2> 
+          <p className="text-gray-600">Keep track of your baby's vaccination schedule and essential medical contacts for quick access.</p> {/* Updated description */}
         </div>
         <Button
           onClick={() => setIsAddingVaccine(true)}
@@ -287,7 +288,17 @@ export default function VaccineTracker() {
                 return (
                   <div key={vaccine.id} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <status.icon className="w-5 h-5 text-blue-600" />
+                      <status.icon
+                        className={`w-5 h-5 ${
+                          status.status === "completed"
+                            ? "text-green-600"
+                            : status.status === "overdue"
+                              ? "text-red-600"
+                              : status.status === "due"
+                                ? "text-yellow-600"
+                                : "text-blue-600"
+                        }`}
+                      />
                       <div>
                         <h4 className="font-medium">{vaccine.name}</h4>
                         <p className="text-sm text-gray-600">{vaccine.description}</p>
@@ -462,15 +473,15 @@ export default function VaccineTracker() {
         <CardContent>
           {vaccines.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-  <Shield className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-  <p>No vaccines recorded yet</p>
-  <Button
-    className="bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-700 hover:to-pink-700 text-white mt-4" // Added text-white here
-    onClick={() => setIsAddingVaccine(true)}
-  >
-    Add First Vaccine
-  </Button>
-</div>
+              <Shield className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <p>No vaccines recorded yet</p>
+              <Button
+                className="bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-700 hover:to-pink-700 text-white mt-4" // Added text-white here
+                onClick={() => setIsAddingVaccine(true)}
+              >
+                Add First Vaccine
+              </Button>
+            </div>
           ) : (
             <div className="space-y-3">
               {vaccines
@@ -630,6 +641,25 @@ export default function VaccineTracker() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Important Contacts */}
+      <div>
+        <hr className="my-10 border-t-2 border-gray-200" />
+        <ImportantContacts />
+      </div>
+
+      {/* Information about health and safety */}
+      <div className="text-center text-gray-500 text-sm mt-8">
+        For more information regarding this section, visit{" "}
+        <a href="/Resources" className="text-pink-600 hover:underline">
+          Resources
+        </a>{" "}
+        or{" "}
+        <a href="/Faqs" className="text-pink-600 hover:underline">
+          FAQs
+        </a>
+        .
       </div>
     </div>
   )
