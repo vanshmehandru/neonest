@@ -48,7 +48,6 @@ export default function SignupBabyPage() {
       name,
       email,
       password,
-      conceivedDate,
       deliveryType,
       babies,
     };
@@ -80,15 +79,7 @@ export default function SignupBabyPage() {
           <option value={3}>3 (Triplets)</option>
         </select>
 
-        <label className="text-sm text-gray-600 mb-1 block">Date Conceived</label>
-        <input
-          type="date"
-          value={conceivedDate}
-          onChange={(e) => setConceivedDate(e.target.value)}
-          required
-          className="mb-4 w-full px-4 py-2 border border-purple-300 rounded-lg"
-        />
-
+    
         <label className="text-sm text-gray-600 mb-1 block">Type of Delivery</label>
         <select
           value={deliveryType}
