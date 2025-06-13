@@ -2,7 +2,7 @@ import React from "react";
 
 const variantClasses = {
   default:
-    "border-transparent bg-blue-600 text-white hover:bg-blue-700", 
+    "border-transparent bg-blue-600 text-white hover:bg-blue-700",
   secondary:
     "border-transparent bg-gray-200 text-gray-800 hover:bg-gray-300",
   destructive:
@@ -10,13 +10,16 @@ const variantClasses = {
   outline: "border border-gray-400 text-black",
 };
 
-function Badge({ className = "", variant = "default", ...props }) {
+function Badge({ children, className = "", variant = "default", ...props }) {
   const baseClasses =
     "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
-  const variantClass = variantClasses[variant] || variantClasses.default;
+
+  const finalClasses = `${baseClasses} ${variantClasses[variant] || variantClasses.default} ${className}`;
 
   return (
-    <div className={`${baseClasses} ${variantClass} ${className}`} {...props} />
+    <span className={finalClasses} {...props}>
+      {children}
+    </span>
   );
 }
 

@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 const tabs = [
   { label: "home", path: "/" },
   { label: "feeding", path: "/Feeding" },
-  { label: "vaccines", path: "/Vaccines" },
+  { label: "medical", path: "/Medical" },
   { label: "memories", path: "/Memories" },
   { label: "resources", path: "/Resources" },
   { label: "essentials", path: "/Essentials" },

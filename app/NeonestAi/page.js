@@ -128,8 +128,8 @@ export default function NeonestAi() {
         <CardContent className="space-y-6 p-6">
           {messages.length === 0 && (
             <div className="text-center space-y-4">
-              <Baby className="w-12 h-12 text-pink-400 mx-auto" />
-              <p className="text-sm text-gray-500">Ask me about baby care, development, sleep & more</p>
+              <p className="text-sm text-gray-500 mt-2">AI advice is not a substitute for professional medical consultation.
+</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {quickQuestions.map((q, idx) => (
                   <Button

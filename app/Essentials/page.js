@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,15 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import Badge from "../components/ui/Badge";
-import { Plus, Package, AlertTriangle, Edit, Trash2, Bell, Save, ShoppingCart } from "lucide-react";
+import Babyessentials from "../components/Babyessentials"; 
+import { Plus, Package, AlertTriangle, Edit, Trash2, Bell, Save, ShoppingCart, ChevronDown, ChevronUp } from "lucide-react"; 
 
 const itemCategories = [
-  { id: "diapers", name: "Diapers & Wipes", icon: "🍼" },
+  { id: "diapering", name: "Diapers & Wipes", icon: "🍼" }, 
   { id: "feeding", name: "Feeding Supplies", icon: "🍼" },
   { id: "clothing", name: "Clothing", icon: "👕" },
   { id: "health", name: "Health & Safety", icon: "🏥" },
-  { id: "toys", name: "Toys & Books", icon: "🧸" },
-  { id: "other", name: "Other", icon: "📦" },
+  { id: "playtime", name: "Toys & Books", icon: "🧸" }, 
+  { id: "bathing", name: "Bathing", icon: "🛁" },
+  { id: "sleeping", name: "Sleeping", icon: "😴" },
+  { id: "travel", name: "Travel", icon: "✈️" },
+  { id: "traditional", name: "Traditional Items", icon: "🪔" },
+  { id: "cleaning", name: "Cleaning Supplies", icon: "🧼" },
+  { id: "others", name: "Others", icon: "📦" }, 
 ];
 
 export default function Page() {
@@ -29,6 +34,7 @@ export default function Page() {
     unit: "pieces",
     notes: "",
   });
+  const [showEssentials, setShowEssentials] = useState(false); 
 
   useEffect(() => {
     const savedInventory = localStorage.getItem("babyInventory");
@@ -93,9 +99,9 @@ export default function Page() {
   const outOfStockItems = inventory.filter((item) => item.currentStock === 0);
 
   const getStockStatus = (item) => {
-    if (item.currentStock === 0) return { status: "out", color: "bg-red-100 text-red-700", text: "Out of Stock" };
+    if (item.currentStock === 0) return { status: "out", color: "bg-red-400 text-red-700", text: "Out of Stock" };
     if (item.currentStock <= item.minThreshold)
-      return { status: "low", color: "bg-yellow-500 text-yellow-700", text: "Low Stock" };
+      return { status: "low", color: "bg-yellow-500 text-yellow-700 ", text: "Low Stock" };
     return { status: "good", color: "bg-green-500 text-green-700", text: "In Stock" };
   };
 
@@ -104,12 +110,45 @@ export default function Page() {
     return category ? category.icon : "📦";
   };
 
+const validCategories = [
+  "clothing",
+  "traditional",
+  "health",
+  "diapering",
+  "feeding",
+  "bathing",
+  "sleeping",
+  "playtime",
+  "travel",
+  "cleaning",
+]; 
+
+const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
+  const categoryToShow = validCategories.includes(essentialCategory)
+    ? essentialCategory
+    : "others";
+
+  setNewItem({
+    name: essentialName,
+    category: categoryToShow, 
+    currentStock: "", 
+    minThreshold: "", 
+    unit: "pieces",
+    notes: "",
+  });
+  setIsAddingItem(true); 
+  setEditingItem(null); 
+};
+
   return (
-    <div className="space-y-8 px-4 md:px-8 py-6 max-w-7xl mx-auto">
+    <div className="space-y-3 px-4 md:px-8 py-6 max-w-7xl mx-auto">
+      {/* Header and Add Item Button */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold text-gray-800 mb-1">Baby Essentials Tracker</h2>
-          <p className="text-gray-600 text-sm">Keep track of diapers, formula, and other baby essentials</p>
+          <p className="text-gray-600 text-sm">
+            Keep track of diapers, formula, and other baby essentials
+          </p>
         </div>
         <Button
           onClick={() => setIsAddingItem(true)}
@@ -119,6 +158,34 @@ export default function Page() {
           Add Item
         </Button>
       </div>
+
+      {/* "See Essentials" Toggle */}
+      <div className="border-t pt-6 mt-6">
+        <h3 className="text-xl font-semibold text-gray-700 mb-1 flex items-center justify-between">
+          <span>Not sure what to add? Start with these essentials:</span>
+          <Button
+            variant="outline"
+            onClick={() => setShowEssentials(!showEssentials)}
+            className="flex items-center gap-1 **font-semibold text-pink-600 border-pink-300**
+                       hover:text-pink-700 **hover:bg-pink-50 hover:border-pink-400**"
+          >
+            {showEssentials ? (
+              <>
+                Hide Essentials <ChevronUp className="w-4 h-4 ml-1" />
+              </>
+            ) : (
+              <>
+                See Essentials <ChevronDown className="w-4 h-4 ml-1" />
+              </>
+            )}
+          </Button>
+        </h3>
+      </div>
+      {showEssentials && (
+        <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: showEssentials ? '500px' : '0' }}>
+          <Babyessentials onAddEssential={handleAddEssentialToInventory} />
+        </div>
+      )}
 
       {/* Alerts */}
       {(lowStockItems.length > 0 || outOfStockItems.length > 0) && (
@@ -150,7 +217,7 @@ export default function Page() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {lowStockItems.map((item) => (
-                    <Badge key={item.id} className="bg-yellow-100 text-yellow-700">
+                    <Badge key={item.id} className="bg-yellow-200 text-yellow-700">
                       {item.name} ({item.currentStock} left)
                     </Badge>
                   ))}
@@ -406,5 +473,5 @@ export default function Page() {
         </Card>
       )}
     </div>
-  );
+  )
 }
