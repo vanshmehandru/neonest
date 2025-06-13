@@ -3,6 +3,7 @@
 import React from "react";
 import { Baby } from "lucide-react";
 import { Button } from "./ui/Button";
+import Chatbot from "./Chatbot";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -51,17 +52,18 @@ const Navbar = () => {
           </nav>
 
           {/* CTA */}
-          <div className="hidden md:flex items-right mx-1">
+          <div className="hidden md:flex items-center space-x-2">
+            <Chatbot />
             <Button
               asChild
-              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 mx-1 text-white"
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
             >
               <Link href="/Login">Login</Link>
             </Button>
 
             <Button
               asChild
-              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 mx-1 text-white"
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
             >
               <Link href="/Signup">Signup</Link>
             </Button>
