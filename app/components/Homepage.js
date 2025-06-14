@@ -12,7 +12,8 @@ import {
   PlayCircle,
   HelpCircle,
   Baby,
-  X, 
+  X,
+  Users, 
 } from "lucide-react";
 import {
   Card,
@@ -30,9 +31,9 @@ const Homepage = () => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  const [userReview, setUserReview] = useState(null); 
+  const [userReview, setUserReview] = useState(null);
 
-  const reviewRef = useRef(null); 
+  const reviewRef = useRef(null);
 
   const featuredReviews = [
     {
@@ -75,7 +76,7 @@ const Homepage = () => {
   );
 
   useEffect(() => {
-    const popUpTime = 15 * 24 * 60 * 60 * 1000; 
+    const popUpTime = 15 * 24 * 60 * 60 * 1000;
     const checkAndPromptReview = () => {
       const lastReview = localStorage.getItem("lastReviewPrompt");
       const now = Date.now();
@@ -95,7 +96,7 @@ const Homepage = () => {
       }
     };
 
-    checkAndPromptReview();
+    checkAndPromptReview(); 
 
     const interval = setInterval(checkAndPromptReview, popUpTime);
 
@@ -112,14 +113,13 @@ const Homepage = () => {
 
     setUserReview(newReview); 
     setFeedbackSubmitted(true);
-    localStorage.setItem("lastReviewPrompt", Date.now().toString());
-
+    localStorage.setItem("lastReviewPrompt", Date.now().toString()); 
     setTimeout(() => {
       setFeedbackSubmitted(false);
       setShowReviewPrompt(false);
       setSelectedRating(0); 
-      setReviewText(""); 
-    }, 2000);
+      setReviewText("");
+    }, 2000); 
 
     console.log("Review submitted:", selectedRating, reviewText);
   };
@@ -170,14 +170,45 @@ const Homepage = () => {
 
   const handleDismissReview = () => {
     setShowReviewPrompt(false);
-    setSelectedRating(0); 
-    setReviewText(""); 
-    setFeedbackSubmitted(false); 
+    setSelectedRating(0);
+    setReviewText("");
+    setFeedbackSubmitted(false);
   };
+
+  const features = [
+    {
+      title: "Personalized Baby Tracker",
+      desc: "NeoNest tailors insights based on your baby's age, growth, and needs, so you're never left guessing.",
+      icon: Baby,
+      borderColor: "border-pink-400",
+      bgColor: "bg-pink-50",
+    },
+    {
+      title: "Expert-Backed Guidance",
+      desc: "All resources and tips are curated by pediatricians and parenting experts to ensure accuracy and care.",
+      icon: Heart,
+      borderColor: "border-blue-400",
+      bgColor: "bg-blue-50",
+    },
+    {
+      title: "AI-Powered Assistant",
+      desc: "Got questions at 2 AM? Our AI Chatbot is trained on baby care data and is always ready to help.",
+      icon: Star,
+      borderColor: "border-purple-400", 
+      bgColor: "bg-purple-50",
+    },
+    {
+      title: "Community + Memory Vault",
+      desc: "Connect with other parents, share experiences, and save memories that last a lifetime.",
+      icon: Users, 
+      borderColor: "border-green-400", 
+      bgColor: "bg-green-50",
+    },
+  ];
 
   return (
     <>
-      {/* hero section */}
+      {/* Hero Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto text-center max-w-6xl">
           <div className="mb-10">
@@ -323,89 +354,78 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* Age Milestones Section */}
-      <section id="milestones" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800">
-              Development Milestones
+     {/* About NeoNest */}
+      <section
+        id="about"
+        className="py-4 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 text-gray-8000 leading-tight">
+              Why Mothers Trust NeoNest
             </h2>
-            <p className="text-xl text-gray-600">
-              Track your baby's amazing growth month by month
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              From sleepless nights to first giggles, NeoNest supports every
+              step of your parenting journey. Here's why thousands of parents
+              trust us.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                month: "0-3 Months",
-                icon: Baby,
-                color: "pink",
-                milestones: [
-                  "First smile",
-                  "Holds head up",
-                  "Follows objects",
-                  "Responds to sounds",
-                ],
-              },
-              {
-                month: "3-6 Months",
-                icon: Heart,
-                color: "purple",
-                milestones: [
-                  "Rolls over",
-                  "Sits with support",
-                  "Reaches for toys",
-                  "Babbles",
-                ],
-              },
-              {
-                month: "6-9 Months",
-                icon: Utensils,
-                color: "blue",
-                milestones: [
-                  "Sits alone",
-                  "Crawls",
-                  "First foods",
-                  "Says 'mama' or 'dada'",
-                ],
-              },
-              {
-                month: "9-12 Months",
-                icon: Star,
-                color: "green",
-                milestones: [
-                  "Pulls to stand",
-                  "First steps",
-                  "Waves bye-bye",
-                  "First words",
-                ],
-              },
-            ].map((stage, index) => (
-              <Card
+
+          <div className="relative flex flex-col items-center">
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1.5 bg-purple-300 z-0"></div>
+
+            {features.map((feature, index) => (
+              <div
                 key={index}
-                className="hover:shadow-lg transition-shadow border-none bg-white/80 backdrop-blur-sm rounded-xl p-4"
+                className={`relative w-full flex items-center mb-20 ${
+                  index % 2 === 0 ? "justify-start" : "justify-end"
+                }`}
               >
-                <CardHeader className="text-center p-0 mb-4">
-                  <div
-                    className={`w-16 h-16 mx-auto rounded-full bg-${stage.color}-400 flex items-center justify-center mb-4 shadow-md`}
-                  >
-                    <stage.icon className={`w-8 h-8 text-${stage.color}-600`} />
+                {/* Circle */}
+                <div
+                  className={`absolute z-10 w-8 h-8 border-4 rounded-full bg-white flex items-center justify-center
+                    ${
+                      index % 2 === 0
+                        ? "left-1/2 -translate-x-1/2" 
+                        : "right-1/2 translate-x-1/2" 
+                    }
+                    ${
+                      index % 2 === 0
+                        ? "border-pink-400"
+                        : "border-blue-400"
+                    } /* Blue-pink border alternating */
+                    shadow-md transition-all duration-300 hover:scale-110 hover:shadow-lg
+                  `}
+                >
+                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>{" "}
+                  {/* Inner dot */}
+                </div>
+
+                {/* Content Box */}
+                <div
+                  className={`relative z-20 w-full max-w-md p-6 shadow-xl rounded-xl border-2
+                    ${
+                      index % 2 === 0
+                        ? "border-pink-400 mr-8" 
+                        : "border-blue-400 ml-8" 
+                    }
+                    bg-white/90 backdrop-blur-sm
+                    transition-all duration-300 hover:shadow-2xl
+                  `}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center shadow-md">
+                      <feature.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">
+                      {feature.title}
+                    </h3>
                   </div>
-                  <CardTitle className="text-xl font-semibold">
-                    {stage.month}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <ul className="space-y-2">
-                    {stage.milestones.map((milestone, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-base text-gray-700">
-                        <div className={`w-2 h-2 rounded-full bg-${stage.color}-400 flex-shrink-0`}></div>
-                        {milestone}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+                  <p className="text-gray-700 text-base leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -415,7 +435,7 @@ const Homepage = () => {
       <section className="px-4 sm:px-6 lg:px-8 bg-white/80 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-            <h2 className="text-3xl font-bold text-gray-800 text-center md:text-left">
+            <h2 className="text-3xl font-bold text-gray-800 text-center mt-6 md:text-left">
               Read how NeoNest helped parents
             </h2>
             <div className="text-center md:text-right">
@@ -445,7 +465,8 @@ const Homepage = () => {
                     {userReview.content}
                   </p>
                   <div className="text-xs text-gray-500 mb-2">
-                    Tags: {userReview.keywords.map((word) => `"${word}"`).join(", ")}
+                    Tags:{" "}
+                    {userReview.keywords.map((word) => `"${word}"`).join(", ")}
                   </div>
                 </CardContent>
               </Card>
@@ -485,7 +506,9 @@ const Homepage = () => {
                     <div className="flex items-center gap-6 text-sm mt-3">
                       <div
                         className={`cursor-pointer flex items-center gap-1 transition-colors duration-200 ${
-                          reaction.helpful ? "text-green-600" : "text-gray-400 hover:text-green-500"
+                          reaction.helpful
+                            ? "text-green-600"
+                            : "text-gray-400 hover:text-green-500"
                         }`}
                         onClick={() => handleReaction(index, "helpful")}
                       >
@@ -496,7 +519,9 @@ const Homepage = () => {
                       </div>
                       <div
                         className={`cursor-pointer flex items-center gap-1 transition-colors duration-200 ${
-                          reaction.notHelpful ? "text-red-600" : "text-gray-400 hover:text-red-500"
+                          reaction.notHelpful
+                            ? "text-red-600"
+                            : "text-gray-400 hover:text-red-500"
                         }`}
                         onClick={() => handleReaction(index, "notHelpful")}
                       >
@@ -523,8 +548,7 @@ const Homepage = () => {
         </div>
       </section>
 
-
-     <NewSections/>
+      <NewSections />
 
       {/* Feedback Modal */}
       {showReviewPrompt && (
