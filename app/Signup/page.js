@@ -34,18 +34,6 @@ export default function SignupPage() {
 
       const data = await res.data;
 
-<<<<<<< HEAD
-      if (data.success) {
-        login(res.data.token);
-        toast.success("Signup successful!");
-        router.push("/signupbaby");
-      } else {
-        toast.error(data.error || "Something went wrong. Try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("An error occurred during signup.");
-=======
       if(res.status == 201){
         console.log(data);
         login(res.data.token)
@@ -60,7 +48,6 @@ export default function SignupPage() {
     catch(err){
       console.log(err);
       toast.error(err);
->>>>>>> 19433ad6e060610c5aedf6acaa1404dd2bce3d03
     }
   };
 

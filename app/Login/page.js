@@ -11,11 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-<<<<<<< HEAD
-  const { isAuth } = useAuth();
-=======
   const {isAuth , login} = useAuth();
->>>>>>> 19433ad6e060610c5aedf6acaa1404dd2bce3d03
 
   useEffect(() => {
     if (isAuth) {
