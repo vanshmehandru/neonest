@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { Plus, Clock, Utensils, Baby, Edit, Trash2, Calendar, Save } from "lucide-react";
@@ -6,76 +6,118 @@ import Input from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
 import Feedingtips from "../components/Feedingtips";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
+
 
 export default function Page() {
+  const router = useRouter();
+  const {isAuth , token} = useAuth();
   const [schedules, setSchedules] = useState([]);
   const [isAddingSchedule, setIsAddingSchedule] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
   const [newSchedule, setNewSchedule] = useState({
     time: "",
-    type: "breast",
+    type: "Breastfeeding",
     amount: "",
     notes: "",
   });
 
+  useEffect(()=>{
+    if(!isAuth){
+      router.push('/Login');
+    }
+  },[])
   useEffect(() => {
-    const saved = localStorage.getItem("feedingSchedules");
-    if (saved) setSchedules(JSON.parse(saved));
+    const fetchSchedules = async () => {
+      try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
+        setSchedules(res.data.feed);
+      } catch (err) {
+        console.error("Error fetching feeds:", err);
+      }
+    };
+
+    fetchSchedules();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("feedingSchedules", JSON.stringify(schedules));
-  }, [schedules]);
+  const handleAddSchedule = async () => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, newSchedule , {
+          headers : {
+            "Content-Type" : 'application/json',
+            Authorization : `Bearer ${token}`
+          }});
 
-  const addSchedule = () => {
-    if (newSchedule.time) {
-      const item = {
-        id: Date.now(),
-        ...newSchedule,
-        date: new Date().toISOString().split("T")[0],
-      };
-      setSchedules([...schedules, item]);
-      setNewSchedule({ time: "", type: "breast", amount: "", notes: "" });
+      setSchedules((prev) => [...prev, res.data.feed]);
+      setNewSchedule({ time: "", type: "Breastfeeding", amount: "", notes: "" });
       setIsAddingSchedule(false);
+    } catch (err) {
+      console.error("Error adding feed:", err);
     }
   };
 
-  const updateSchedule = (id, updated) => {
-    setSchedules(schedules.map((s) => (s.id === id ? { ...s, ...updated } : s)));
-    setEditingSchedule(null);
+  const handleUpdateSchedule = async (id, updatedData) => {
+    try {
+      await axios.patch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, { feedId: id, ...updatedData },{
+        
+          headers : {
+            "Content-Type" : 'application/json',
+            Authorization : `Bearer ${token}`
+          }
+      });
+      setSchedules((prev) =>
+        prev.map((s) => (s._id === id ? { ...s, ...updatedData } : s))
+      );
+      setEditingSchedule(null);
+    } catch (err) {
+      console.error("Error updating feed:", err);
+    }
   };
 
-  const deleteSchedule = (id) => {
-    setSchedules(schedules.filter((s) => s.id !== id));
+  const handleDeleteSchedule = async (id) => {
+    try {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, { params: { feedId: id } ,
+      headers : {
+        Authorization : `Bearer ${token}`
+      }} , );
+      setSchedules((prev) => prev.filter((s) => s._id !== id));
+    } catch (err) {
+      console.error("Error deleting feed:", err);
+    }
   };
 
   const getTypeIcon = (type) => {
     switch (type) {
-      case "breast": return Baby;
-      case "bottle":
-      case "solid": return Utensils;
+      case "Breastfeeding": return Baby;
+      case "Bottle":
+      case "Solid Food": return Utensils;
       default: return Utensils;
     }
   };
 
   const getTypeColor = (type) => {
     switch (type) {
-      case "breast": return "bg-pink-400 text-pink-700";
-      case "bottle": return "bg-blue-400 text-blue-700";
-      case "solid": return "bg-green-400 text-green-700";
+      case "Breastfeeding": return "bg-pink-400 text-pink-700";
+      case "Bottle": return "bg-blue-400 text-blue-700";
+      case "Solid Food": return "bg-green-400 text-green-700";
       default: return "bg-gray-100 text-gray-700";
     }
   };
 
-  const today = new Date().toISOString().split("T")[0];
-  const todaySchedules = schedules.filter(s => s.date === today).sort((a, b) => a.time.localeCompare(b.time));
+  const todaySchedules = schedules;
 
   return (
     <div className="space-y-6 p-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold text-gray-800">Feeding: Tips and Schedule</h2>
-          <p className="text-gray-600">Know best feeding practices and track your baby's feeding times and amounts.</p>
+          <p className="text-gray-600">Track your baby's feeding times and learn best practices.</p>
         </div>
         <Button onClick={() => setIsAddingSchedule(true)} className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
           <Plus className="w-4 h-4 mr-2" /> Add Feeding
@@ -92,58 +134,80 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Time</label>
-              <Input type="time" value={editingSchedule ? editingSchedule.time : newSchedule.time} onChange={(e) => {
-                const value = e.target.value;
-                editingSchedule
-                  ? setEditingSchedule({ ...editingSchedule, time: value })
-                  : setNewSchedule({ ...newSchedule, time: value });
-              }} />
+              <Input
+                type="time"
+                value={editingSchedule ? editingSchedule.time : newSchedule.time}
+                onChange={(e) =>
+                  editingSchedule
+                    ? setEditingSchedule({ ...editingSchedule, time: e.target.value })
+                    : setNewSchedule({ ...newSchedule, time: e.target.value })
+                }
+              />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Type</label>
-              <select className="w-full p-2 border border-gray-300 rounded-md" value={editingSchedule ? editingSchedule.type : newSchedule.type} onChange={(e) => {
-                const value = e.target.value;
-                editingSchedule
-                  ? setEditingSchedule({ ...editingSchedule, type: value })
-                  : setNewSchedule({ ...newSchedule, type: value });
-              }}>
-                <option value="breast">Breastfeeding</option>
-                <option value="bottle">Bottle</option>
-                <option value="solid">Solid Food</option>
+              <select
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={editingSchedule ? editingSchedule.type : newSchedule.type}
+                onChange={(e) =>
+                  editingSchedule
+                    ? setEditingSchedule({ ...editingSchedule, type: e.target.value })
+                    : setNewSchedule({ ...newSchedule, type: e.target.value })
+                }
+              >
+                <option value="Breastfeeding">Breastfeeding</option>
+                <option value="Bottle">Bottle</option>
+                <option value="Solid Food">Solid Food</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Amount</label>
-              <Input placeholder="e.g., 4 oz, 30 min, 1/2 cup" value={editingSchedule ? editingSchedule.amount : newSchedule.amount} onChange={(e) => {
-                const value = e.target.value;
-                editingSchedule
-                  ? setEditingSchedule({ ...editingSchedule, amount: value })
-                  : setNewSchedule({ ...newSchedule, amount: value });
-              }} />
+              <Input
+                placeholder="e.g., 4 oz, 30 min, 1/2 cup"
+                value={editingSchedule ? editingSchedule.amount : newSchedule.amount}
+                onChange={(e) =>
+                  editingSchedule
+                    ? setEditingSchedule({ ...editingSchedule, amount: e.target.value })
+                    : setNewSchedule({ ...newSchedule, amount: e.target.value })
+                }
+              />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Notes</label>
-              <Input placeholder="Optional notes" value={editingSchedule ? editingSchedule.notes : newSchedule.notes} onChange={(e) => {
-                const value = e.target.value;
-                editingSchedule
-                  ? setEditingSchedule({ ...editingSchedule, notes: value })
-                  : setNewSchedule({ ...newSchedule, notes: value });
-              }} />
+              <Input
+                placeholder="Optional notes"
+                value={editingSchedule ? editingSchedule.notes : newSchedule.notes}
+                onChange={(e) =>
+                  editingSchedule
+                    ? setEditingSchedule({ ...editingSchedule, notes: e.target.value })
+                    : setNewSchedule({ ...newSchedule, notes: e.target.value })
+                }
+              />
             </div>
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button onClick={editingSchedule ? () => updateSchedule(editingSchedule.id, editingSchedule) : addSchedule} className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600">
+            <Button
+              onClick={() =>
+                editingSchedule
+                  ? handleUpdateSchedule(editingSchedule._id, editingSchedule)
+                  : handleAddSchedule()
+              }
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+            >
               <Save className="w-4 h-4 mr-2" /> {editingSchedule ? "Update" : "Add"} Feeding
             </Button>
-            <Button onClick={() => {
-              setIsAddingSchedule(false);
-              setEditingSchedule(null);
-              setNewSchedule({ time: "", type: "breast", amount: "", notes: "" });
-            }} className="border border-gray-300">
+            <Button
+              onClick={() => {
+                setIsAddingSchedule(false);
+                setEditingSchedule(null);
+                setNewSchedule({ time: "", type: "Breastfeeding", amount: "", notes: "" });
+              }}
+              className="border border-gray-300"
+            >
               Cancel
             </Button>
           </div>
@@ -170,7 +234,7 @@ export default function Page() {
             {todaySchedules.map((s) => {
               const Icon = getTypeIcon(s.type);
               return (
-                <div key={s.id} className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50">
+                <div key={s._id} className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-gray-500" />
@@ -187,7 +251,7 @@ export default function Page() {
                     <Button onClick={() => setEditingSchedule(s)} className="text-sm">
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button onClick={() => deleteSchedule(s.id)} className="text-red-600 hover:text-red-700 text-sm">
+                    <Button onClick={() => handleDeleteSchedule(s._id)} className="text-red-600 hover:text-red-700 text-sm">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -198,9 +262,7 @@ export default function Page() {
         )}
       </div>
 
-      {/* Feeding Tips Component (Correctly placed outside the schedule div) */}
-      <Feedingtips/>
-
-    </div> // Closing div for the entire page content
+      <Feedingtips />
+    </div>
   );
 }
