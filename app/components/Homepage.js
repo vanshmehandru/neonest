@@ -12,7 +12,7 @@ import {
   PlayCircle,
   HelpCircle,
   Baby,
-  X, // Import the X icon for close button
+  X, 
 } from "lucide-react";
 import {
   Card,
@@ -22,17 +22,17 @@ import {
   CardDescription,
 } from "./ui/card";
 import { Button } from "./ui/Button";
-import Chatbot from "./Chatbot";
 import Image from "next/image";
+import NewSections from "./Newsections";
 
 const Homepage = () => {
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  const [userReview, setUserReview] = useState(null); // for showing added review
+  const [userReview, setUserReview] = useState(null); 
 
-  const reviewRef = useRef(null); // 👈 for scrolling to review box
+  const reviewRef = useRef(null); 
 
   const featuredReviews = [
     {
@@ -54,7 +54,7 @@ const Homepage = () => {
       tag: "AI Pediatrician",
       content:
         "The AI pediatrician diagnosed my child's sickness based on symptoms and I was able to consult the doctor on time and help my child. Genius!",
-      keywords: ["Health", "Realiable", "Safety"],
+      keywords: ["Health", "Reliable", "Safety"],
     },
     {
       name: "Nisha Gupta",
@@ -75,8 +75,7 @@ const Homepage = () => {
   );
 
   useEffect(() => {
-    const popUpTime = 15 * 24 * 60 * 60 * 1000; // Define here so it's accessible
-
+    const popUpTime = 15 * 24 * 60 * 60 * 1000; 
     const checkAndPromptReview = () => {
       const lastReview = localStorage.getItem("lastReviewPrompt");
       const now = Date.now();
@@ -96,33 +95,30 @@ const Homepage = () => {
       }
     };
 
-    // Trigger on component mount
     checkAndPromptReview();
 
-    // Set up interval to re-check every 2 minutes (or whatever frequency you prefer for re-prompting)
     const interval = setInterval(checkAndPromptReview, popUpTime);
 
-    return () => clearInterval(interval); // Clear interval on unmount
+    return () => clearInterval(interval); 
   }, []);
 
   const handleSubmitReview = () => {
     const newReview = {
-      name: "You", // You can prompt for name later
+      name: "You",
       tag: "Shared Experience",
       content: reviewText,
       keywords: [`${selectedRating} ★`],
     };
 
-    setUserReview(newReview); // show user's review at the top
+    setUserReview(newReview); 
     setFeedbackSubmitted(true);
     localStorage.setItem("lastReviewPrompt", Date.now().toString());
 
-    // Hide the "Thank you" message and then the modal after 2 seconds
     setTimeout(() => {
       setFeedbackSubmitted(false);
       setShowReviewPrompt(false);
-      setSelectedRating(0); // Reset rating
-      setReviewText(""); // Clear review text
+      setSelectedRating(0); 
+      setReviewText(""); 
     }, 2000);
 
     console.log("Review submitted:", selectedRating, reviewText);
@@ -165,7 +161,6 @@ const Homepage = () => {
     });
   };
 
-  // 👇 Helper to show prompt + scroll to reviewRef
   const handleAddReviewClick = () => {
     setShowReviewPrompt(true);
     setTimeout(() => {
@@ -175,9 +170,9 @@ const Homepage = () => {
 
   const handleDismissReview = () => {
     setShowReviewPrompt(false);
-    setSelectedRating(0); // Reset rating
-    setReviewText(""); // Clear review text
-    setFeedbackSubmitted(false); // Reset feedback submission status
+    setSelectedRating(0); 
+    setReviewText(""); 
+    setFeedbackSubmitted(false); 
   };
 
   return (
@@ -229,7 +224,7 @@ const Homepage = () => {
       </section>
 
       {/* Features Overview */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-50 to-pink-50">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 text-gray-800">
@@ -528,7 +523,10 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* Feedback Modal Overlay */}
+
+     <NewSections/>
+
+      {/* Feedback Modal */}
       {showReviewPrompt && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <section
@@ -589,9 +587,6 @@ const Homepage = () => {
           </section>
         </div>
       )}
-
-      {/* Chatbot Component */}
-      <Chatbot />
     </>
   );
 };
