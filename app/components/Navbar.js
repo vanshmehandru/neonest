@@ -10,11 +10,13 @@ import { useAuth } from "../context/AuthContext";
 
 const tabs = [
   { label: "home", path: "/" },
+  { label: "growth", path: "/Growth" },
   { label: "feeding", path: "/Feeding" },
+   { label: "sleep", path: "/Sleep" },
   { label: "medical", path: "/Medical" },
+  { label: "essentials", path: "/Essentials" },
   { label: "memories", path: "/Memories" },
   { label: "resources", path: "/Resources" },
-  { label: "essentials", path: "/Essentials" },
   { label: "faqs", path: "/Faqs" },
 ];
 
@@ -39,7 +41,7 @@ const Navbar = () => {
           </div>
 
           {/* Tabs */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-4">
             {tabs.map(({ label, path }) => (
               <Link
                 key={label}

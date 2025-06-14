@@ -5,6 +5,7 @@ import { Plus, Clock, Utensils, Baby, Edit, Trash2, Calendar, Save } from "lucid
 import Input from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
+import Feedingtips from "../components/Feedingtips";
 
 export default function Page() {
   const [schedules, setSchedules] = useState([]);
@@ -73,8 +74,8 @@ export default function Page() {
     <div className="space-y-6 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">Feeding Schedule</h2>
-          <p className="text-gray-600">Track your baby's feeding times and amounts</p>
+          <h2 className="text-3xl font-bold text-gray-800">Feeding: Tips and Schedule</h2>
+          <p className="text-gray-600">Know best feeding practices and track your baby's feeding times and amounts.</p>
         </div>
         <Button onClick={() => setIsAddingSchedule(true)} className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
           <Plus className="w-4 h-4 mr-2" /> Add Feeding
@@ -83,7 +84,7 @@ export default function Page() {
 
       {(isAddingSchedule || editingSchedule) && (
         <div className="bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-lg p-6">
-          <h3 className="text-xl font-semibold flex items-center gap-2 mb-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2 mt-3 mb-10">
             <Utensils className="w-5 h-5 text-pink-400" />
             {editingSchedule ? "Edit Feeding" : "Add New Feeding"}
           </h3>
@@ -196,6 +197,10 @@ export default function Page() {
           </div>
         )}
       </div>
-    </div>
+
+      {/* Feeding Tips Component (Correctly placed outside the schedule div) */}
+      <Feedingtips/>
+
+    </div> // Closing div for the entire page content
   );
 }

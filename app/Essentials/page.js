@@ -161,7 +161,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
 
       {/* "See Essentials" Toggle */}
       <div className="border-t pt-6 mt-6">
-        <h3 className="text-xl font-semibold text-gray-700 mb-1 flex items-center justify-between">
+        <h3 className="text-xl font-semibold text-black mb-1 flex items-center justify-between">
           <span>Not sure what to add? Start with these essentials:</span>
           <Button
             variant="outline"
