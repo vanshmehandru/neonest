@@ -1,61 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const {isAuth} = useAuth();
+  const { isAuth } = useAuth();
 
-
-  useEffect(()=>{
-    if(isAuth){
-      return toast.error("Already logged in");
+  useEffect(() => {
+    if (isAuth) {
+      toast.error("Already logged in");
     }
-  },[])
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-
       const formData = new FormData();
-      formData.append("email",email);
-      formData.append("password",password);
+      formData.append("email", email);
+      formData.append("password", password);
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, formData,{
-        headers : {
-          'Content-Type' : 'application/json'
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
-
-      console.log(res);
+      );
 
       const data = await res.data;
 
       if (data.success) {
         router.push("/");
       } else {
-        alert("Invalid login credentials.");
+        toast.error("Invalid login credentials.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-4">
-      <ToastContainer/>
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
@@ -107,7 +103,10 @@ export default function LoginPage() {
 
         <p className="mt-4 text-sm text-center text-gray-500">
           New to NeoNest?{" "}
-          <a href="/Signup" className="text-pink-600 hover:underline font-medium">
+          <a
+            href="/Signup"
+            className="text-pink-600 hover:underline font-medium"
+          >
             Create an account
           </a>
         </p>
@@ -115,4 +114,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

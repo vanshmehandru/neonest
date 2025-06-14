@@ -4,8 +4,7 @@ import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
+import { Toaster, toast } from 'sonner'
 
 export default function SignupBabyPage() {
   const router = useRouter();
@@ -17,7 +16,6 @@ export default function SignupBabyPage() {
     { babyName: "", gender: "", dateOfBirth: "", time: "", Weight: "" },
   ]);
 
-  // ➕ Update babies list when number changes
   const handleNoOfBabiesChange = (e) => {
     const count = parseInt(e.target.value);
     setnoOfBabies(count);
@@ -78,7 +76,7 @@ export default function SignupBabyPage() {
 
   return (
     <>
-    <ToastContainer/>
+    <Toaster richColors />
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-blue-100 to-purple-100">
       <form
         onSubmit={handleSubmit}
