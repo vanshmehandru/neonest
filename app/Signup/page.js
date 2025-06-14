@@ -32,15 +32,15 @@ export default function SignupPage() {
       })
       const data = await res.data;
 
-      if(data.error){
-        toast.error(data.error);
+      if(data.sucess){
+        console.log(data);
+        login(res.data.token)
+
+        toast.success(data.success);
+        router.push(`/signupbaby`);
       }
-
-      console.log(data);
-      login(res.data.token)
-
-      toast.success(data.success);
-      router.push(`/signupbaby`);
+      console.log(error)
+      toast.error(data.error);
       }
     catch(err){
       console.log(err);
@@ -49,8 +49,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-yellow-100 to-pink-100">
+    <>
       <ToastContainer/>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-yellow-100 to-pink-100">
       <form onSubmit={handleNext} className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4 text-center text-pink-600">Parent Signup</h1>
 
@@ -91,5 +92,6 @@ export default function SignupPage() {
         </button>
       </form>
     </div>
+    </>
   );
 }
