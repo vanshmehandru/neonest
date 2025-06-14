@@ -74,8 +74,9 @@ export async function POST(req) {
 export async function PUT(req) {
   try {
     const body = await req.json();
-    const { noOfBabies, deliveryType, BabyDet } = body;
-    console.log(BabyDet[0].babyName);
+    const { noOfBabies, deliveryType } = body;
+    const BabyDet = JSON.parse(body.BabyDet);
+
     if (!noOfBabies || !deliveryType) {
       return Response.json(
         { error: "Please provide all details" },
@@ -89,6 +90,7 @@ export async function PUT(req) {
         );
     }
     for (let i = 0; i < noOfBabies; i++) {
+      console.log(BabyDet[0])
       if (
         !BabyDet[i].babyName ||
         !BabyDet[i].dateOfBirth ||

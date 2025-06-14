@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import { AuthProvider } from "./context/AuthContext";
 // import Chatbot from "./components/Chatbot";
 
 const geistSans = Geist({
@@ -23,13 +24,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`flex flex-col min-h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Navbar />
-        {/* <Chatbot/> */}
-        <main className="flex-grow">{children}</main>
-        <Footer />
+      <body
+        className={`flex flex-col min-h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
 }
-

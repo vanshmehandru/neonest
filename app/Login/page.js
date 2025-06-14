@@ -3,26 +3,47 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock } from "lucide-react";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const {isAuth} = useAuth();
+
+
+  useEffect(()=>{
+    if(isAuth){
+      return toast.error("Already logged in");
+    }
+  },[])
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+
+      const formData = new FormData();
+      formData.append("email",email);
+      formData.append("password",password);
+
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, formData,{
+        headers : {
+          'Content-Type' : 'application/json'
+        }
       });
 
-      const data = await res.json();
+      console.log(res);
+
+      const data = await res.data;
 
       if (data.success) {
-        router.push("/dashboard");
+        router.push("/");
       } else {
         alert("Invalid login credentials.");
       }
@@ -34,6 +55,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-4">
+      <ToastContainer/>
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"

@@ -1,77 +1,103 @@
-'use client';
+"use client";
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import axios from "axios";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 export default function SignupBabyPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const name = searchParams.get('name');
-  const email = searchParams.get('email');
-  const password = searchParams.get('password');
-
-  const [numBabies, setNumBabies] = useState(1);
-  const [conceivedDate, setConceivedDate] = useState('');
-  const [deliveryType, setDeliveryType] = useState('');
+  const { token } = useAuth();
+  const [noOfBabies, setnoOfBabies] = useState(1);
+  const [deliveryType, setDeliveryType] = useState("");
 
   const [babies, setBabies] = useState([
-    { name: '', gender: '', birthdate: '', timeOfBirth: '', weight: '' },
+    { babyName: "", gender: "", dateOfBirth: "", time: "", Weight: "" },
   ]);
 
   // ➕ Update babies list when number changes
-  const handleNumBabiesChange = (e) => {
+  const handleNoOfBabiesChange = (e) => {
     const count = parseInt(e.target.value);
-    setNumBabies(count);
+    setnoOfBabies(count);
     setBabies((prev) =>
-      Array.from({ length: count }, (_, i) => prev[i] || {
-        name: '',
-        gender: '',
-        birthdate: '',
-        timeOfBirth: '',
-        weight: ''
-      })
+      Array.from(
+        { length: count },
+        (_, i) =>
+          prev[i] || {
+            name: "",
+            gender: "",
+            birthdate: "",
+            timeOfBirth: "",
+            weight: "",
+          }
+      )
     );
   };
 
-  // 📝 Handle field update
   const handleBabyChange = (index, field, value) => {
     const updated = [...babies];
     updated[index][field] = value;
     setBabies(updated);
   };
 
-  // ✅ Final submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = {
-      name,
-      email,
-      password,
-      deliveryType,
-      babies,
-    };
+    try {
+      const formData = new FormData();
+      formData.append("noOfBabies", noOfBabies);
+      formData.append("deliveryType", deliveryType);
+      formData.append("BabyDet", JSON.stringify(babies));
 
-    console.log('Final Signup Data:', formData);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/signup`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token} `,
+          },
+        }
+      );
+      const data = await res.data;
+      if (data.error) {
+        toast.error(data.error);
+      }
 
-    // 🔁 Redirect to homepage
-    router.push('/');
+      console.log(data);
+
+      toast.success(data.success);
+      router.push(`/`);
+    } catch (err) {
+      console.log(err);
+      toast.error(err);
+    }
   };
 
   return (
+    <>
+    <ToastContainer/>
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-blue-100 to-purple-100">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-xl shadow-xl w-full max-w-2xl"
       >
-        <h1 className="text-2xl font-bold mb-1 text-center text-purple-600">Baby Details</h1>
-        <h2 className="text-md text-center text-gray-500 mb-4">Welcome, {name} 👋</h2>
+        <h1 className="text-2xl font-bold mb-1 text-center text-purple-600">
+          Baby Details
+        </h1>
+        <h2 className="text-md text-center text-gray-500 mb-4">
+          Welcome, {name} 👋
+        </h2>
 
         {/* General Info */}
-        <label className="text-sm text-gray-600 mb-1 block">Number of babies at birth</label>
+        <label className="text-sm text-gray-600 mb-1 block">
+          Number of babies at birth
+        </label>
         <select
-          value={numBabies}
-          onChange={handleNumBabiesChange}
+          value={noOfBabies}
+          onChange={handleNoOfBabiesChange}
           className="mb-4 w-full px-4 py-2 border border-purple-300 rounded-lg"
         >
           <option value={1}>1 (Single)</option>
@@ -79,8 +105,9 @@ export default function SignupBabyPage() {
           <option value={3}>3 (Triplets)</option>
         </select>
 
-    
-        <label className="text-sm text-gray-600 mb-1 block">Type of Delivery</label>
+        <label className="text-sm text-gray-600 mb-1 block">
+          Type of Delivery
+        </label>
         <select
           value={deliveryType}
           onChange={(e) => setDeliveryType(e.target.value)}
@@ -93,7 +120,6 @@ export default function SignupBabyPage() {
           <option value="Assisted">Assisted</option>
         </select>
 
-        {/* Baby Sections */}
         {babies.map((baby, index) => (
           <div
             key={index}
@@ -106,24 +132,28 @@ export default function SignupBabyPage() {
             <input
               type="text"
               placeholder="Baby's Name"
-              value={baby.name}
-              onChange={(e) => handleBabyChange(index, 'name', e.target.value)}
+              value={baby.babyName}
+              onChange={(e) =>
+                handleBabyChange(index, "babyName", e.target.value)
+              }
               required
               className="mb-3 w-full px-4 py-2 border rounded-lg"
             />
 
             <input
               type="date"
-              value={baby.birthdate}
-              onChange={(e) => handleBabyChange(index, 'birthdate', e.target.value)}
+              value={baby.dateOfBirth}
+              onChange={(e) =>
+                handleBabyChange(index, "dateOfBirth", e.target.value)
+              }
               required
               className="mb-3 w-full px-4 py-2 border rounded-lg"
             />
 
             <input
               type="time"
-              value={baby.timeOfBirth}
-              onChange={(e) => handleBabyChange(index, 'timeOfBirth', e.target.value)}
+              value={baby.time}
+              onChange={(e) => handleBabyChange(index, "time", e.target.value)}
               required
               className="mb-3 w-full px-4 py-2 border rounded-lg"
               placeholder="Time of Birth"
@@ -131,7 +161,9 @@ export default function SignupBabyPage() {
 
             <select
               value={baby.gender}
-              onChange={(e) => handleBabyChange(index, 'gender', e.target.value)}
+              onChange={(e) =>
+                handleBabyChange(index, "gender", e.target.value)
+              }
               required
               className="mb-3 w-full px-4 py-2 border rounded-lg"
             >
@@ -143,8 +175,10 @@ export default function SignupBabyPage() {
 
             <input
               type="number"
-              value={baby.weight}
-              onChange={(e) => handleBabyChange(index, 'weight', e.target.value)}
+              value={baby.Weight}
+              onChange={(e) =>
+                handleBabyChange(index, "Weight", e.target.value)
+              }
               placeholder="Weight at birth (kg) - optional"
               min="0"
               step="0.1"
@@ -154,7 +188,9 @@ export default function SignupBabyPage() {
         ))}
 
         <p className="text-center text-sm text-gray-500 mb-4">
-          At NeoNest, your data privacy is paramount. We are committed to keeping your information confidential and do not share it with third parties.
+          At NeoNest, your data privacy is paramount. We are committed to
+          keeping your information confidential and do not share it with third
+          parties.
         </p>
 
         <button
@@ -165,5 +201,6 @@ export default function SignupBabyPage() {
         </button>
       </form>
     </div>
+    </>
   );
 }

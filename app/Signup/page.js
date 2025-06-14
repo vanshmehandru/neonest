@@ -1,22 +1,56 @@
 'use client';
 
+import { Toast } from '@radix-ui/react-toast';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../context/AuthContext';
+
 
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth();
 
-  const handleNext = (e) => {
+  const handleNext = async(e) => {
     e.preventDefault();
-    const query = new URLSearchParams({ name, email, password }).toString();
-    router.push(`/signupbaby?${query}`); 
+
+    try{
+      const formData = new FormData();
+      formData.set("name" , name);
+      formData.set("email" , email);
+      formData.set("password" , password);
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/signup` , formData , {
+        headers : {
+          "Content-Type" : "application/json"
+        }
+      })
+      const data = await res.data;
+
+      if(data.error){
+        toast.error(data.error);
+      }
+
+      console.log(data);
+      login(res.data.token)
+
+      toast.success(data.success);
+      router.push(`/signupbaby`);
+      }
+    catch(err){
+      console.log(err);
+      toast.error(err);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-yellow-100 to-pink-100">
+      <ToastContainer/>
       <form onSubmit={handleNext} className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4 text-center text-pink-600">Parent Signup</h1>
 
