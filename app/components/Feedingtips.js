@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
-import { Baby, Heart, Utensils, Star } from "lucide-react";
+import { Utensils } from "lucide-react";
 
 const Feedingtips = () => {
   return (
@@ -144,10 +144,6 @@ const Feedingtips = () => {
         </div>
       </section>
 
-             <div>
-        <Feedingtips/>
-      </div>
-
       {/* Information */}
       <div className="text-center text-gray-500 text-sm mt-8 mb-6">
         For more information regarding this section, visit{" "}
@@ -165,4 +161,3 @@ const Feedingtips = () => {
 };
 
 export default Feedingtips;
-

@@ -5,7 +5,11 @@ import { Plus, Clock, Moon, Edit, Trash2, Calendar, Save } from "lucide-react";
 import Input from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
-import Feedingtips from "../components/Feedingtips";
+import Sleeptips from "../components/Sleeptips";
+import Sleepbadge from "../components/Sleepbadge";
+import SleepPatterns from "../components/SleepPatterns";
+import SleepGraphs from "../components/SleepGraphs";
+
 export default function Page() {
   const [schedules, setSchedules] = useState([]);
   const [isAddingSchedule, setIsAddingSchedule] = useState(false);
@@ -75,19 +79,23 @@ export default function Page() {
   const today = new Date().toISOString().split("T")[0];
   const todaySchedules = schedules.filter(s => s.date === today).sort((a, b) => a.time.localeCompare(b.time));
 
+  const recentNightSleeps = schedules
+    .filter(s => s.type === "night" && s.duration)
+    .slice(-3);
+
+  const showSleepBadge = recentNightSleeps.length === 3 && recentNightSleeps.every(s => s.type === "night" && s.duration);
+
   return (
     <div className="space-y-6 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">Sleep: Routine & Tracker</h2>
-          <p className="text-gray-600">Track your baby’s naps, nighttime sleep, and moods after rest.</p>
+          <h2 className="text-3xl font-bold text-gray-800">Sleep: Tips & Routine</h2>
+          <p className="text-gray-600">Track your baby’s naps, nighttime sleep, and moods after rest. Also read age-wise tips to help your child sleep better!</p>
         </div>
         <Button onClick={() => setIsAddingSchedule(true)} className="bg-gradient-to-r from-indigo-500 to-violet-500 text-white">
           <Plus className="w-4 h-4 mr-2" /> Add Sleep Log
         </Button>
       </div>
-
-      <Feedingtips />
 
       {(isAddingSchedule || editingSchedule) && (
         <div className="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 rounded-lg p-6">
@@ -213,6 +221,12 @@ export default function Page() {
           </div>
         )}
       </div>
+
+       {showSleepBadge && <Sleepbadge logs={schedules} />}
+      <SleepPatterns logs={schedules} />
+      <SleepGraphs logs={schedules} />
+
+      <Sleeptips/>
     </div>
   );
 }

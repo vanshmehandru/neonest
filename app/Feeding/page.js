@@ -197,6 +197,10 @@ export default function Page() {
           </div>
         )}
       </div>
-    </div>
+
+      {/* Feeding Tips Component (Correctly placed outside the schedule div) */}
+      <Feedingtips/>
+
+    </div> // Closing div for the entire page content
   );
 }
