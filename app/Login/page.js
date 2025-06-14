@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const {isAuth} = useAuth();
+  const {isAuth , login} = useAuth();
 
 
   useEffect(()=>{
@@ -43,6 +43,7 @@ export default function LoginPage() {
       const data = await res.data;
 
       if (data.success) {
+        login(res.data.token)
         router.push("/");
       } else {
         alert("Invalid login credentials.");

@@ -6,6 +6,7 @@ import { Button } from "./ui/Button";
 import Chatbot from "./Chatbot";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 
 const tabs = [
   { label: "home", path: "/" },
@@ -19,6 +20,9 @@ const tabs = [
 
 const Navbar = () => {
   const pathname = usePathname();
+
+  const { isAuth, logout } = useAuth();
+  console.log(isAuth);
 
   return (
     <header className="bg-white/80 backdrop-blur-sm border-b border-pink-100 sticky top-0 z-50">
@@ -52,21 +56,32 @@ const Navbar = () => {
           </nav>
 
           {/* CTA */}
+
           <div className="hidden md:flex items-center space-x-2">
             <Chatbot />
-            <Button
-              asChild
-              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
-            >
-              <Link href="/Login">Login</Link>
-            </Button>
-
-            <Button
-              asChild
-              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
-            >
-              <Link href="/Signup">Signup</Link>
-            </Button>
+            {!isAuth ? (
+              <>
+                {" "}
+                <Button
+                  asChild
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
+                >
+                  <Link href="/Login">Login</Link>
+                </Button>
+                <Button
+                  asChild
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
+                >
+                  <Link href="/Signup">Signup</Link>
+                </Button>
+              </>
+            ) : (
+              <Button
+                className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
+                onClick = {logout}>
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       </div>

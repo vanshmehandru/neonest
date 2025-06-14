@@ -32,15 +32,16 @@ export default function SignupPage() {
       })
       const data = await res.data;
 
-      if(data.sucess){
+      if(res.status == 201){
         console.log(data);
         login(res.data.token)
 
         toast.success(data.success);
         router.push(`/signupbaby`);
       }
-      console.log(error)
-      toast.error(data.error);
+      else{
+        toast.error(data.error);
+      }
       }
     catch(err){
       console.log(err);
