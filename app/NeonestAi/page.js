@@ -1,17 +1,15 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useChat } from "ai/react"
+import axios from "axios"
 import {
   Bot,
-  User,
   Send,
   Loader2,
   Baby,
   Utensils,
   Clock,
   Heart,
-  ChevronDown,
   MessageSquare,
   TrendingUp,
   ThumbsUp,
@@ -19,8 +17,12 @@ import {
   BarChart3,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, } from "../components/ui/tooltip"; 
-
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "../components/ui/tooltip"
 import { Button } from "../components/ui/Button"
 import Input from "../components/ui/Input"
 import Badge from "../components/ui/Badge"
@@ -34,49 +36,63 @@ const quickQuestions = [
 ]
 
 const roles = [
-  { label: "🩺 Pediatrician", value: "pediatrician" },
+  { label: "🧺 Pediatrician", value: "pediatrician" },
   { label: "👶 Baby", value: "baby" },
-  { label: "🧓 Nani", value: "nani" },
+  { label: "🧃 Nani", value: "nani" },
 ]
 
 export default function NeonestAi() {
   const [role, setRole] = useState("pediatrician")
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const [analytics, setAnalytics] = useState({})
   const messagesEndRef = useRef(null)
-
-  const {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit: originalHandleSubmit,
-    isLoading,
-  } = useChat({
-    api: "/api/chat",
-    body: { role },
-    onFinish: () => scrollToBottom(),
-  })
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    originalHandleSubmit(e)
+  const handleSubmit = async (e = null, customInput = null) => {
+    if (e) e.preventDefault()
+    const finalInput = customInput !== null ? customInput : input
+    if (!finalInput.trim()) return
+
+    const userMessage = {
+      id: Date.now(),
+      role: "user",
+      content: finalInput,
+      createdAt: new Date().toISOString(),
+    }
+
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
+    setInput("")
+    setIsLoading(true)
+
+    try {
+      const res = await axios.post("/api/chat", {
+        messages: updatedMessages,
+        role,
+      })
+
+      setMessages([...updatedMessages, res.data])
+    } catch (err) {
+      console.error("Error:", err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleQuickQuestion = (question) => {
-    const synthetic = { preventDefault: () => {}, target: { value: question } }
-    handleInputChange(synthetic)
-    setTimeout(() => handleSubmit({ preventDefault: () => {} }), 100)
+    setInput("")
+    handleSubmit(null, question)
   }
 
   const formatTime = (date) =>
     date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  useEffect(() => scrollToBottom(), [messages])
 
   useEffect(() => {
     setAnalytics({
@@ -102,34 +118,34 @@ export default function NeonestAi() {
             <Bot className="w-6 h-6 text-pink-500" />
             <CardTitle>NeoNest AI Chatbot</CardTitle>
           </div>
-         <TooltipProvider>
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        className="border px-3 py-1 rounded-md text-sm bg-white cursor-pointer text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-      >
-        {roles.map((r) => (
-          <option key={r.value} value={r.value}>
-            {r.label}
-          </option>
-        ))}
-      </select>
-    </TooltipTrigger>
-    <TooltipContent side="bottom" sideOffset={6}>
-      Choose the role you'd like to chat with
-    </TooltipContent>
-  </Tooltip>
-</TooltipProvider>
-
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="border px-3 py-1 rounded-md text-sm bg-white cursor-pointer text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                >
+                  {roles.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={6}>
+                Choose the role you'd like to chat with
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </CardHeader>
 
         <CardContent className="space-y-6 p-6">
           {messages.length === 0 && (
             <div className="text-center space-y-4">
-              <p className="text-sm text-gray-500 mt-2">AI advice is not a substitute for professional medical consultation.
-</p>
+              <p className="text-sm text-gray-500 mt-2">
+                AI advice is not a substitute for professional medical consultation.
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {quickQuestions.map((q, idx) => (
                   <Button
@@ -148,7 +164,7 @@ export default function NeonestAi() {
 
           <div className="space-y-4 max-h-[400px] overflow-y-auto">
             {messages.map((m) => (
-              <div 
+              <div
                 key={m.id}
                 className={`flex mt-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
@@ -160,8 +176,8 @@ export default function NeonestAi() {
                   }`}
                 >
                   <div className="prose prose-sm max-w-full text-sm">
-  <ReactMarkdown>{m.content}</ReactMarkdown>
-</div>
+                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                  </div>
                   <span className="text-xs text-gray-300 block mt-1">
                     {formatTime(new Date(m.createdAt || Date.now()))}
                   </span>
@@ -174,7 +190,7 @@ export default function NeonestAi() {
           <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
             <Input
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               placeholder="Ask me about baby care..."
               className="flex-1 border-pink-300"
             />
@@ -183,13 +199,16 @@ export default function NeonestAi() {
               disabled={isLoading || !input.trim()}
               className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
             >
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      {/* Analytics Section */}
       <div className="max-w-4xl mx-auto space-y-4">
         <Card>
           <CardHeader>
@@ -228,10 +247,14 @@ export default function NeonestAi() {
           </CardHeader>
           <CardContent className="space-y-2">
             {analytics.topQuestions?.map((q, i) => (
-              <div key={i} className="flex justify-between text-sm border-b pb-1">
+              <button
+                key={i}
+                onClick={() => handleQuickQuestion(q.question)}
+                className="flex justify-between text-sm border-b pb-1 w-full text-left hover:bg-gray-100 px-2 py-1 rounded transition"
+              >
                 <span>{q.question}</span>
                 <Badge variant="secondary">{q.count}</Badge>
-              </div>
+              </button>
             ))}
           </CardContent>
         </Card>
@@ -239,4 +262,3 @@ export default function NeonestAi() {
     </div>
   )
 }
-
