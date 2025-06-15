@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
@@ -10,19 +11,23 @@ const Footer = () => {
       <div className="container mx-auto">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Brand and Description */}
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center">
-                {/* Logo */}
-              </div>
-              <span className="text-xl font-bold">NeoNest</span>
+<div>
+            <div className="flex items-center gap-x-1 mb-2">
+              <Image
+                src="/logoFooter.jpg"
+                alt="NeoNest Logo"
+                width={40}
+                height={40}
+                className="object-contain -mt-1.5"  
+              />
+              <span className="font-semibold text-lg mb-2">NeoNest</span>
             </div>
             <p className="text-gray-400 text-sm">
               Supporting parents through their baby's incredible first year with expert guidance, AI assistance, and a loving community.
             </p>
           </div>
 
-          {/* Features */}
+{/* Features */}
           <div>
             <h4 className="font-semibold mb-2">Features</h4>
             <ul className="space-y-2 text-sm text-gray-400">
