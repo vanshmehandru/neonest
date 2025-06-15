@@ -221,7 +221,7 @@ const Homepage = () => {
               Now with AI-powered chat support!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button
+              {/* <Button
                 size="lg"
                 className="bg-gradient-to-r from-pink-500 to-purple-500 text-lg px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
               >
@@ -233,7 +233,7 @@ const Homepage = () => {
                 className="border-pink-300 text-pink-600 text-lg px-8 py-3 rounded-full hover:bg-pink-50 transition-all duration-300"
               >
                 Chat with AI Assistant
-              </Button>
+              </Button> */}
             </div>
             <div className="relative w-full max-w-2xl mx-auto">
               <Image
