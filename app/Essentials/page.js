@@ -23,6 +23,11 @@ const itemCategories = [
 ];
 
 export default function Page() {
+
+  useEffect(() => {
+    document.title = "Essentials | NeoNest";
+  }, []);
+
   const [inventory, setInventory] = useState([]);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [editingItem, setEditingItem] = useState(null);

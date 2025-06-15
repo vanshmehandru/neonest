@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
@@ -96,6 +96,11 @@ const resourceTypes = [
 ];
 
 export default function Resources() {
+
+  useEffect(() => {
+      document.title = "Resources | NeoNest";
+    }, []);
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedType, setSelectedType] = useState("all");

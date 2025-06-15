@@ -2,11 +2,16 @@
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
 
 export default function SignupPage() {
+
+  useEffect(() => {
+      document.title = "Signup | NeoNest";
+    }, []);
+  
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/Button"
 import Input from "../components/ui/Input"
@@ -110,6 +110,11 @@ const faqCategories = [
 ]
 
 export default function Page() {
+
+  useEffect(() => {
+      document.title = "FAQs | NeoNest";
+    }, []);
+  
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [expandedFAQ, setExpandedFAQ] = useState(null)

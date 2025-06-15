@@ -47,6 +47,11 @@ const standardVaccines = [
 ]
 
 export default function VaccineTracker() {
+
+  useEffect(() => {
+    document.title = "Medical | NeoNest";
+  }, []);
+
   const [vaccines, setVaccines] = useState([])
   const [babyBirthDate, setBabyBirthDate] = useState("")
   const [isAddingVaccine, setIsAddingVaccine] = useState(false)
