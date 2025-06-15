@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, Facebook, Twitter, Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -23,7 +23,7 @@ const Footer = () => {
               <span className="font-semibold text-lg mb-2">NeoNest</span>
             </div>
             <p className="text-gray-400 text-sm">
-              Supporting parents through their baby's incredible first year with expert guidance, AI assistance, and a loving community.
+              Supporting parents through their baby's incredible first year with expert guidance, AI assistance, and a loving community—<br/>making parenting 10x easier, calmer, and more connected. <br/>Happy baby, Happy you!
             </p>
           </div>
 
@@ -32,24 +32,25 @@ const Footer = () => {
             <h4 className="font-semibold mb-2">Features</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
+                <Link href="/Growth" className="hover:text-white transition-colors block">
+                  Growth Tracker
+                </Link>
                 <Link href="/Feeding" className="hover:text-white transition-colors block">
-                  Feeding Schedule
+                  Feed Scheduler
                 </Link>
               </li>
+                <Link href="/Sleep" className="hover:text-white transition-colors block">
+                  Sleep Tracker
+                </Link>
               <li>
                 <Link href="/Medical" className="hover:text-white transition-colors block">
                   Vaccine Tracker
                 </Link>
               </li>
-              <li>
-                <Link href="/Memories" className="hover:text-white transition-colors block">
-                  Memories, Blogs & Community
-                </Link>
-              </li>
-              <li>
-                <Link href="/Essentials" className="hover:text-white transition-colors block">
+              <Link href="/Essentials" className="hover:text-white transition-colors block">
                   Inventory Tracker
                 </Link>
+              <li>
               </li>
             </ul>
           </div>
@@ -58,6 +59,11 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-2">Support</h4>
             <ul className="space-y-2 text-sm text-gray-400">
+              <li>
+                <Link href="/" className="hover:text-white transition-colors block">
+                  About NeoNest
+                </Link>
+              </li>
               <li>
                 <Link href="/Faqs" className="hover:text-white transition-colors block">
                   FAQs
@@ -75,7 +81,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link href="/Memories" className="hover:text-white transition-colors block">
-                  Community
+                  Momories, Community & Blogs
                 </Link>
               </li>
             </ul>
@@ -93,9 +99,17 @@ const Footer = () => {
                 <Phone className="w-4 h-4" />
                 <span>1-800-BABY-CARE</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span>Available 24/7</span>
+               <div className="flex items-center gap-2">
+                <Instagram className="w-4 h-4" />
+                <span>@neonestofficial</span>
+              </div>
+               <div className="flex items-center gap-2">
+                <Facebook className="w-4 h-4" />
+                <span>@neonestofficial</span>
+              </div>
+               <div className="flex items-center gap-2">
+                <Twitter className="w-4 h-4" />
+                <span>@neonestofficial</span>
               </div>
             </div>
           </div>
