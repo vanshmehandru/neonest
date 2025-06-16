@@ -14,6 +14,9 @@ import {
 import Input from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
+import Sleeptips from "../components/Sleeptips";
+import SleepGraphs from "../components/SleepGraphs";
+import SleepPatterns from "../components/SleepPatterns";
 
 export default function Page() {
   const [schedules, setSchedules] = useState([]);
@@ -412,6 +415,26 @@ export default function Page() {
           </div>
         )}
       </div>
+
+     {/* Sleep Graphs Section */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-lg border p-6">
+        <h3 className="text-lg font-semibold flex items-center gap-2 mb-4">
+          <Moon className="w-5 h-5 text-purple-600" />
+          Sleep Trends & Graphs
+        </h3>
+        <SleepGraphs schedules={schedules} /> 
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-sm rounded-lg border p-6">
+        <h3 className="text-lg font-semibold flex items-center gap-2 mb-4">
+          <Clock className="w-5 h-5 text-teal-600" />
+          Sleep Patterns Analysis
+        </h3>
+        <SleepPatterns schedules={schedules} /> 
+      </div>
+
+      <Sleeptips/>
     </div>
+
   );
 }

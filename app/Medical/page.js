@@ -452,6 +452,9 @@ const markAsCompleted = async (vaccineId) => {
         <p>No due vaccines found</p>
       )}
     </div>
+
+<ImportantContacts/>
+
     </div>
   );
 }

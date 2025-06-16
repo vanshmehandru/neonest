@@ -98,7 +98,9 @@ export default function CommunityBlog() {
       {/* Upload Section */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold">Share a Memory</CardTitle>
+          {/* <CardTitle className="text-xl font-semibold">Share a Memory</CardTitle> */}
+          <h4 className="text-4xl font-bold text-gray-800">Memories, Community & Blogs</h4>
+        <p className="text-lg text-gray-600">Share your stories and experiences, save a memory and read what others have to share.</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
