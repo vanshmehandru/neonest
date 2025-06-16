@@ -42,6 +42,11 @@ const roles = [
 ]
 
 export default function NeonestAi() {
+
+  useEffect(() => {
+    document.title = "NeoNestAi | NeoNest";
+  }, []);
+
   const [role, setRole] = useState("pediatrician")
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")

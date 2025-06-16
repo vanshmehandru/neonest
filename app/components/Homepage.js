@@ -221,7 +221,7 @@ const Homepage = () => {
               Now with AI-powered chat support!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button
+              {/* <Button
                 size="lg"
                 className="bg-gradient-to-r from-pink-500 to-purple-500 text-lg px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
               >
@@ -233,15 +233,15 @@ const Homepage = () => {
                 className="border-pink-300 text-pink-600 text-lg px-8 py-3 rounded-full hover:bg-pink-50 transition-all duration-300"
               >
                 Chat with AI Assistant
-              </Button>
+              </Button> */}
             </div>
             <div className="relative w-full max-w-2xl mx-auto">
               <Image
-                src="/baby_parents.jpeg"
+                src="/happyBaby.png"
                 alt="Happy baby with parents"
-                width={600}
-                height={400}
-                className="mx-auto rounded-2xl shadow-2xl w-full h-auto"
+                width={500}
+                height={500}
+                className="mx-auto mt-8 rounded-2xl shadow-2xl w-full h-auto"
               />
               <div className="absolute -top-4 -left-4 w-20 h-20 bg-yellow-200 rounded-full flex items-center justify-center animate-bounce shadow-md">
                 <Heart className="w-9 h-9 text-yellow-600" />
@@ -255,7 +255,7 @@ const Homepage = () => {
       </section>
 
       {/* Features Overview */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 bg-white/80">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 text-gray-800">

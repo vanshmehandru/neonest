@@ -11,6 +11,11 @@ import SleepPatterns from "../components/SleepPatterns";
 import SleepGraphs from "../components/SleepGraphs";
 
 export default function Page() {
+
+  useEffect(() => {
+    document.title = "Sleep | NeoNest";
+  }, []);
+
   const [schedules, setSchedules] = useState([]);
   const [isAddingSchedule, setIsAddingSchedule] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);

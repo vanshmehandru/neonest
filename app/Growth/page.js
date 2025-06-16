@@ -8,7 +8,12 @@ import InteractionWithBaby from "../components/InteractionWithBaby";
 import MilestoneTracker from "../components/MilestoneTracker";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from "recharts";
 
-export default function Growth() {
+
+export default function GrowthPage() {
+  useEffect(() => {
+    document.title = "Growth | NeoNest";
+  }, []);
+
   const [growthLogs, setGrowthLogs] = useState([]);
   const [newEntry, setNewEntry] = useState({
     date: "",

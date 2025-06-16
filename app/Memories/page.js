@@ -9,6 +9,11 @@ import { Plus, Camera, Video, Heart, Share2, Edit, Trash2, Eye, MessageCircle, U
 import Image from "next/image"
 
 export default function MemoryVault() {
+
+  useEffect(() => {
+    document.title = "Memories, Community & Blogs | NeoNest";
+  }, []);
+
   const [memories, setMemories] = useState([])
   const [isAddingMemory, setIsAddingMemory] = useState(false)
   const [editingMemory, setEditingMemory] = useState(null)

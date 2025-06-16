@@ -2,11 +2,16 @@
 
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Toaster, toast } from 'sonner'
 
 export default function SignupBabyPage() {
+
+  useEffect(() => {
+      document.title = "Baby Details | NeoNest";
+    }, []);
+  
   const router = useRouter();
   const { token } = useAuth();
   const [noOfBabies, setnoOfBabies] = useState(1);

@@ -12,6 +12,11 @@ import { useRouter } from "next/navigation";
 
 
 export default function Page() {
+
+  useEffect(() => {
+    document.title = "Feeding | NeoNest";
+  }, []);
+
   const router = useRouter();
   const {isAuth , token} = useAuth();
   const [schedules, setSchedules] = useState([]);
