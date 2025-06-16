@@ -23,81 +23,168 @@ const itemCategories = [
 ];
 
 export default function Page() {
-
-  useEffect(() => {
-    document.title = "Essentials | NeoNest";
-  }, []);
-
   const [inventory, setInventory] = useState([]);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [newItem, setNewItem] = useState({
     name: "",
-    category: "diapers",
+    category: "diapering",
     currentStock: "",
     minThreshold: "",
     unit: "pieces",
     notes: "",
   });
-  const [showEssentials, setShowEssentials] = useState(false); 
+  const [showEssentials, setShowEssentials] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const savedInventory = localStorage.getItem("babyInventory");
-    if (savedInventory) setInventory(JSON.parse(savedInventory));
-  }, []);
+  // Get auth token from localStorage
+  const getAuthToken = () => {
+    return localStorage.getItem('token');
+  };
 
-  useEffect(() => {
-    localStorage.setItem("babyInventory", JSON.stringify(inventory));
-  }, [inventory]);
-
-  const addItem = () => {
-    if (newItem.name && newItem.currentStock && newItem.minThreshold) {
-      const item = {
-        id: Date.now(),
-        ...newItem,
-        currentStock: parseInt(newItem.currentStock),
-        minThreshold: parseInt(newItem.minThreshold),
-        lastUpdated: new Date().toISOString(),
-      };
-      setInventory([...inventory, item]);
-      setNewItem({ name: "", category: "diapers", currentStock: "", minThreshold: "", unit: "pieces", notes: "" });
-      setIsAddingItem(false);
+  // Fetch inventory from API
+  const fetchInventory = async () => {
+    try {
+      setIsLoading(true);
+      const token = getAuthToken();
+      if (!token) throw new Error('No authentication token found');
+      
+      const response = await fetch('/api/essentials', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch inventory');
+      
+      const data = await response.json();
+      setInventory(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching inventory:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const updateItem = (id, updatedItem) => {
-    setInventory(
-      inventory.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              ...updatedItem,
-              currentStock: parseInt(updatedItem.currentStock),
-              minThreshold: parseInt(updatedItem.minThreshold),
-              lastUpdated: new Date().toISOString(),
-            }
-          : item
-      )
-    );
-    setEditingItem(null);
+  useEffect(() => {
+    document.title = "Essentials | NeoNest";
+    fetchInventory();
+  }, []);
+
+  // Add new item
+  const addItem = async () => {
+    if (newItem.name && newItem.currentStock && newItem.minThreshold) {
+      try {
+        const token = getAuthToken();
+        if (!token) throw new Error('No authentication token found');
+        
+        const response = await fetch('/api/essentials', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(newItem)
+        });
+        
+        if (!response.ok) throw new Error('Failed to add item');
+        
+        const addedItem = await response.json();
+        setInventory([...inventory, addedItem]);
+        setNewItem({ 
+          name: "", 
+          category: "diapering", 
+          currentStock: "", 
+          minThreshold: "", 
+          unit: "pieces", 
+          notes: "" 
+        });
+        setIsAddingItem(false);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error adding item:', err);
+      }
+    }
   };
 
-  const deleteItem = (id) => {
-    setInventory(inventory.filter((item) => item.id !== id));
+  // Update item
+  const updateItem = async (id, updatedItem) => {
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('No authentication token found');
+      
+      const response = await fetch(`/api/essentials/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedItem)
+      });
+      
+      if (!response.ok) throw new Error('Failed to update item');
+      
+      const updatedItemData = await response.json();
+      setInventory(inventory.map(item => 
+        item._id === id ? updatedItemData : item
+      ));
+      setEditingItem(null);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error updating item:', err);
+    }
   };
 
-  const updateStock = (id, newStock) => {
-    setInventory(
-      inventory.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              currentStock: parseInt(newStock),
-              lastUpdated: new Date().toISOString(),
-            }
-          : item
-      )
-    );
+  // Delete item
+  const deleteItem = async (id) => {
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('No authentication token found');
+      
+      const response = await fetch(`/api/essentials/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete item');
+      
+      setInventory(inventory.filter(item => item._id !== id));
+    } catch (err) {
+      setError(err.message);
+      console.error('Error deleting item:', err);
+    }
+  };
+
+  // Update stock
+  const updateStock = async (id, newStock) => {
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('No authentication token found');
+      
+      const response = await fetch(`/api/essentials/stock/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ currentStock: newStock })
+      });
+      
+      if (!response.ok) throw new Error('Failed to update stock');
+      
+      const updatedItem = await response.json();
+      setInventory(inventory.map(item => 
+        item._id === id ? updatedItem : item
+      ));
+    } catch (err) {
+      setError(err.message);
+      console.error('Error updating stock:', err);
+    }
   };
 
   const lowStockItems = inventory.filter((item) => item.currentStock <= item.minThreshold);
@@ -115,35 +202,55 @@ export default function Page() {
     return category ? category.icon : "📦";
   };
 
-const validCategories = [
-  "clothing",
-  "traditional",
-  "health",
-  "diapering",
-  "feeding",
-  "bathing",
-  "sleeping",
-  "playtime",
-  "travel",
-  "cleaning",
-]; 
+  const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
+    const validCategories = [
+      "clothing", "traditional", "health", "diapering", "feeding", 
+      "bathing", "sleeping", "playtime", "travel", "cleaning"
+    ];
+    const categoryToShow = validCategories.includes(essentialCategory)
+      ? essentialCategory
+      : "others";
 
-const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
-  const categoryToShow = validCategories.includes(essentialCategory)
-    ? essentialCategory
-    : "others";
+    setNewItem({
+      name: essentialName,
+      category: categoryToShow, 
+      currentStock: "", 
+      minThreshold: "", 
+      unit: "pieces",
+      notes: "",
+    });
+    setIsAddingItem(true); 
+    setEditingItem(null); 
+  };
 
-  setNewItem({
-    name: essentialName,
-    category: categoryToShow, 
-    currentStock: "", 
-    minThreshold: "", 
-    unit: "pieces",
-    notes: "",
-  });
-  setIsAddingItem(true); 
-  setEditingItem(null); 
-};
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p>Loading your baby essentials...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center p-6 max-w-md mx-auto bg-red-50 rounded-lg">
+          <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-red-700 mb-2">Error Loading Data</h2>
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button 
+            onClick={fetchInventory}
+            className="bg-red-600 hover:bg-red-700"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3 px-4 md:px-8 py-6 max-w-7xl mx-auto">
@@ -171,8 +278,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
           <Button
             variant="outline"
             onClick={() => setShowEssentials(!showEssentials)}
-            className="flex items-center gap-1 **font-semibold text-pink-600 border-pink-300**
-                       hover:text-pink-700 **hover:bg-pink-50 hover:border-pink-400**"
+            className="flex items-center gap-1 font-semibold text-pink-600 border-pink-300 hover:text-pink-700 hover:bg-pink-50 hover:border-pink-400"
           >
             {showEssentials ? (
               <>
@@ -204,7 +310,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {outOfStockItems.map((item) => (
-                    <Badge key={item.id} variant="destructive">
+                    <Badge key={item._id} variant="destructive">
                       {item.name}
                     </Badge>
                   ))}
@@ -222,7 +328,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {lowStockItems.map((item) => (
-                    <Badge key={item.id} className="bg-yellow-200 text-yellow-700">
+                    <Badge key={item._id} className="bg-yellow-200 text-yellow-700">
                       {item.name} ({item.currentStock} left)
                     </Badge>
                   ))}
@@ -346,7 +452,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
             </div>
             <div className="flex gap-2">
               <Button
-                onClick={editingItem ? () => updateItem(editingItem.id, editingItem) : addItem}
+                onClick={editingItem ? () => updateItem(editingItem._id, editingItem) : addItem}
                 className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
               >
                 <Save className="w-4 h-4 mr-2" />
@@ -359,7 +465,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
                   setEditingItem(null)
                   setNewItem({
                     name: "",
-                    category: "diapers",
+                    category: "diapering",
                     currentStock: "",
                     minThreshold: "",
                     unit: "pieces",
@@ -374,12 +480,12 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
         </Card>
       )}
 
-      {/* Essentials */}
+      {/* Essentials List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {inventory.map((item) => {
           const stockStatus = getStockStatus(item)
           return (
-            <Card key={item.id} className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-shadow">
+            <Card key={item._id} className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
@@ -401,7 +507,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
                     <Input
                       type="number"
                       value={item.currentStock}
-                      onChange={(e) => updateStock(item.id, e.target.value)}
+                      onChange={(e) => updateStock(item._id, e.target.value)}
                       className="w-20 h-8 text-center"
                     />
                     <span className="text-sm text-gray-500">{item.unit}</span>
@@ -425,7 +531,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => deleteItem(item.id)}
+                    onClick={() => deleteItem(item._id)}
                     className="text-red-600 hover:text-red-700"
                   >
                     <Trash2 className="w-3 h-3" />
@@ -466,7 +572,7 @@ const handleAddEssentialToInventory = (essentialName, essentialCategory) => {
           <CardContent>
             <div className="space-y-2">
               {lowStockItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-2 bg-white/50 rounded">
+                <div key={item._id} className="flex items-center justify-between p-2 bg-white/50 rounded">
                   <span>{item.name}</span>
                   <Badge variant="outline">
                     Need: {Math.max(item.minThreshold * 2 - item.currentStock, item.minThreshold)} {item.unit}
