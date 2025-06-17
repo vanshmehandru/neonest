@@ -97,7 +97,7 @@ export default function NeonestAi() {
   const formatTime = (date) =>
     date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
-  useEffect(() => scrollToBottom(), [messages])
+  useEffect(() => scrollToBottom(), [messages, isLoading]) // Added isLoading to dependency array
 
   useEffect(() => {
     setAnalytics({
@@ -189,6 +189,16 @@ export default function NeonestAi() {
                 </div>
               </div>
             ))}
+
+            {/* NeoNest AI Thinking Indicator */}
+            {isLoading && (
+              <div className="flex justify-start mt-3">
+                <div className="rounded-xl px-4 py-2 max-w-xs bg-gray-200 text-gray-800 flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">NeoNest AI is thinking...</span>
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
