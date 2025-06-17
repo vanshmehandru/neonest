@@ -84,6 +84,51 @@ body {
   }
 }
 
+.custom-scrollbar::-webkit-scrollbar-track {
+          background: #f0f8ff;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #f87171; 
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #ec4899;
+        }
+
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #f87171 #f0f8ff;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #ec4899; 
+          cursor: pointer;
+          border: 2px solid #fff;
+          box-shadow: 0 0 0 2px #fbcfe8;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #ec4899;
+          cursor: pointer;
+          border: 2px solid #fff;
+          box-shadow: 0 0 0 2px #fbcfe8; 
+        }
+        .range-thumb-pink::-webkit-slider-thumb {
+            background: #ec4899; 
+        }
+        .range-thumb-pink::-moz-range-thumb {
+            background: #ec4899; 
+        }
+
 @layer base {
   * {
     @apply border-border;

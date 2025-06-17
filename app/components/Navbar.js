@@ -19,6 +19,7 @@ const tabs = [
   { label: "memories", path: "/Memories" },
   { label: "resources", path: "/Resources" },
   { label: "faqs", path: "/Faqs" },
+  { label: "lullaby", path: "/Lullaby" }
 ];
 
 const Navbar = () => {
