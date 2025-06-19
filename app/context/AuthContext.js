@@ -25,12 +25,12 @@ export const AuthProvider = ({ children }) => {
     router.push('/dashboard');
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setIsAuth(false);
-    router.push('/login');
-  };
+const logout = () => {
+  localStorage.removeItem('token');
+  setToken(null);
+  setIsAuth(false);
+};
+
 
   return (
     <AuthContext.Provider value={{ token, isAuth, login, logout }}>
