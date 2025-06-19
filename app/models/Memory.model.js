@@ -6,6 +6,11 @@ const memorySchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  title: {
+  type: String,
+  required: true, 
+  trim: true
+},
   description: {
     type: String,
     required: true
@@ -19,9 +24,13 @@ const memorySchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  tags: {
+  type: [String], 
+  default: [],     
+},
   isPublic: {
     type: Boolean,
-    default: true
+    default: false
   },
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
