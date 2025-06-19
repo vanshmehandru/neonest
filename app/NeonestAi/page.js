@@ -174,7 +174,7 @@ export default function NeonestAi() {
                 className={`flex mt-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`rounded-xl px-4 py-2 max-w-xs ${
+                  className={`rounded-xl px-4 py-2 max-w-[80%] ${
                     m.role === "user"
                       ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
                       : "bg-gray-200 text-gray-800"
@@ -183,7 +183,11 @@ export default function NeonestAi() {
                   <div className="prose prose-sm max-w-full text-sm">
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   </div>
-                  <span className="text-xs text-gray-300 block mt-1">
+                  <span className={`text-xs ${
+                    m.role === "user"
+                      ? "text-gray-300"
+                      : "text-pink-700"
+                  }`}>
                     {formatTime(new Date(m.createdAt || Date.now()))}
                   </span>
                 </div>
@@ -193,7 +197,7 @@ export default function NeonestAi() {
             {/* NeoNest AI Thinking Indicator */}
             {isLoading && (
               <div className="flex justify-start mt-3">
-                <div className="rounded-xl px-4 py-2 max-w-xs bg-gray-200 text-gray-800 flex items-center gap-2">
+                <div className="rounded-xl px-4 py-2 max-w-[80%] bg-gray-200 text-gray-800 flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-sm">NeoNest AI is thinking...</span>
                 </div>
@@ -202,7 +206,7 @@ export default function NeonestAi() {
             <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
+          <form onSubmit={handleSubmit} className="flex gap-2 mt-30">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}

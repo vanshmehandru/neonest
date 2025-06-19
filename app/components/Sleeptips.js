@@ -81,7 +81,7 @@ const Sleeptips = () => {
                 <CardTitle className="text-2xl font-semibold  text-gray-800">{stage.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 text-[15px] text-pink-700">
+                <ul className="space-y-2 text-[15px] bg-gradient-to-l from-pink-700 to-blue-700 bg-clip-text text-transparent">
                   {stage.tips.map((tip, idx) => (
                     <li key={idx}>{tip}</li>
                   ))}

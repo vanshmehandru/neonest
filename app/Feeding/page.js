@@ -10,15 +10,13 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
-
 export default function Page() {
-
   useEffect(() => {
     document.title = "Feeding | NeoNest";
   }, []);
 
   const router = useRouter();
-  const {isAuth , token} = useAuth();
+  const { isAuth, token } = useAuth();
   const [schedules, setSchedules] = useState([]);
   const [isAddingSchedule, setIsAddingSchedule] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
@@ -29,20 +27,21 @@ export default function Page() {
     notes: "",
   });
 
-  useEffect(()=>{
-    if(!isAuth){
-      router.push('/Login');
+  useEffect(() => {
+    if (!isAuth) {
+      router.push("/Login");
     }
-  },[])
+  }, []);
+
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`,{
-          headers : {
-            Authorization : `Bearer ${token}`
-          }
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        setSchedules(res.data.feed);
+        setSchedules(res.data.feed || []);
       } catch (err) {
         console.error("Error fetching feeds:", err);
       }
@@ -53,13 +52,20 @@ export default function Page() {
 
   const handleAddSchedule = async () => {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, newSchedule , {
-          headers : {
-            "Content-Type" : 'application/json',
-            Authorization : `Bearer ${token}`
-          }});
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`,
+        newSchedule,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      setSchedules((prev) => [...prev, res.data.feed]);
+      if (res.data.feed) {
+        setSchedules((prev) => [...prev, res.data.feed]);
+      }
       setNewSchedule({ time: "", type: "Breastfeeding", amount: "", notes: "" });
       setIsAddingSchedule(false);
     } catch (err) {
@@ -69,16 +75,17 @@ export default function Page() {
 
   const handleUpdateSchedule = async (id, updatedData) => {
     try {
-      await axios.patch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, { feedId: id, ...updatedData },{
-        
-          headers : {
-            "Content-Type" : 'application/json',
-            Authorization : `Bearer ${token}`
-          }
-      });
-      setSchedules((prev) =>
-        prev.map((s) => (s._id === id ? { ...s, ...updatedData } : s))
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`,
+        { feedId: id, ...updatedData },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      setSchedules((prev) => prev.map((s) => (s._id === id ? { ...s, ...updatedData } : s)));
       setEditingSchedule(null);
     } catch (err) {
       console.error("Error updating feed:", err);
@@ -87,10 +94,12 @@ export default function Page() {
 
   const handleDeleteSchedule = async (id) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, { params: { feedId: id } ,
-      headers : {
-        Authorization : `Bearer ${token}`
-      }} , );
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feeding`, {
+        params: { feedId: id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setSchedules((prev) => prev.filter((s) => s._id !== id));
     } catch (err) {
       console.error("Error deleting feed:", err);
@@ -99,19 +108,26 @@ export default function Page() {
 
   const getTypeIcon = (type) => {
     switch (type) {
-      case "Breastfeeding": return Baby;
+      case "Breastfeeding":
+        return Baby;
       case "Bottle":
-      case "Solid Food": return Utensils;
-      default: return Utensils;
+      case "Solid Food":
+        return Utensils;
+      default:
+        return Utensils;
     }
   };
 
   const getTypeColor = (type) => {
     switch (type) {
-      case "Breastfeeding": return "bg-pink-400 text-pink-700";
-      case "Bottle": return "bg-blue-400 text-blue-700";
-      case "Solid Food": return "bg-green-400 text-green-700";
-      default: return "bg-gray-100 text-gray-700";
+      case "Breastfeeding":
+        return "bg-pink-400 text-pink-700";
+      case "Bottle":
+        return "bg-blue-400 text-blue-700";
+      case "Solid Food":
+        return "bg-green-400 text-green-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -124,7 +140,10 @@ export default function Page() {
           <h2 className="text-3xl font-bold text-gray-800">Feeding: Tips and Schedule</h2>
           <p className="text-gray-600">Track your baby's feeding times and learn best practices.</p>
         </div>
-        <Button onClick={() => setIsAddingSchedule(true)} className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
+        <Button
+          onClick={() => setIsAddingSchedule(true)}
+          className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
+        >
           <Plus className="w-4 h-4 mr-2" /> Add Feeding
         </Button>
       </div>
@@ -230,16 +249,23 @@ export default function Page() {
           <div className="text-center py-8 text-gray-500">
             <Utensils className="w-12 h-12 mx-auto mb-4 text-gray-300" />
             <p>No feedings scheduled for today</p>
-            <Button onClick={() => setIsAddingSchedule(true)} className="mt-4 border border-gray-300 text-white">
+            <Button
+              onClick={() => setIsAddingSchedule(true)}
+              className="mt-4 border border-gray-300 text-white"
+            >
               <Plus className="w-4 h-4 mr-2" /> Add First Feeding
             </Button>
           </div>
         ) : (
           <div className="space-y-3">
             {todaySchedules.map((s) => {
+              if (!s || !s.type) return null;
               const Icon = getTypeIcon(s.type);
               return (
-                <div key={s._id} className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50">
+                <div
+                  key={s._id}
+                  className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50"
+                >
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-gray-500" />
@@ -256,7 +282,10 @@ export default function Page() {
                     <Button onClick={() => setEditingSchedule(s)} className="text-sm">
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button onClick={() => handleDeleteSchedule(s._id)} className="text-red-600 hover:text-red-700 text-sm">
+                    <Button
+                      onClick={() => handleDeleteSchedule(s._id)}
+                      className="text-red-600 hover:text-red-700 text-sm"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
