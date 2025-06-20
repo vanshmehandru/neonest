@@ -137,6 +137,22 @@ body {
   animation: fade-in 0.4s ease-out;
 }
 
+.markdown h1 {
+  @apply text-2xl font-bold text-pink-600 mt-4 mb-2;
+}
+.markdown h2 {
+  @apply text-xl font-semibold text-blue-600 mt-4 mb-2;
+}
+.markdown p {
+  @apply text-sm leading-relaxed mb-2;
+}
+.markdown ul {
+  @apply list-disc list-inside text-sm mb-2;
+}
+.markdown li {
+  @apply ml-4 mb-1;
+}
+
 
 @layer base {
   * {

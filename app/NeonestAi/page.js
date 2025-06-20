@@ -2,27 +2,9 @@
 
 import { useState, useRef, useEffect } from "react"
 import axios from "axios"
-import {
-  Bot,
-  Send,
-  Loader2,
-  Baby,
-  Utensils,
-  Clock,
-  Heart,
-  MessageSquare,
-  TrendingUp,
-  ThumbsUp,
-  Users,
-  BarChart3,
-} from "lucide-react"
+import { Bot, Send, Loader2, Baby, Utensils, Clock, Heart, MessageSquare, ThumbsUp, Users, BarChart3, Copy } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "../components/ui/tooltip"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../components/ui/tooltip"
 import { Button } from "../components/ui/Button"
 import Input from "../components/ui/Input"
 import Badge from "../components/ui/Badge"
@@ -36,86 +18,136 @@ const quickQuestions = [
 ]
 
 const roles = [
-  { label: "🧺 Pediatrician", value: "pediatrician" },
-  { label: "👶 Baby", value: "baby" },
-  { label: "🧃 Nani", value: "nani" },
+  { label: "Pediatrician", value: "pediatrician" },
+  { label: "Baby", value: "baby" },
+  { label: "Motherly", value: "mother" },
 ]
 
 export default function NeonestAi() {
-
   useEffect(() => {
-    document.title = "NeoNestAi | NeoNest";
-  }, []);
+    document.title = "NeoNestAi | NeoNest"
+  }, [])
 
   const [role, setRole] = useState("pediatrician")
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [analytics, setAnalytics] = useState({})
+  const [analytics, setAnalytics] = useState({
+    totalChats: 1247,
+    totalMessages: 5832,
+    averageResponseTime: 1.2,
+    satisfactionRate: 94.5,
+    topQuestions: [
+      { question: "When should my baby start crawling?", count: 156 },
+      { question: "How do I introduce solid foods?", count: 134 },
+      { question: "What's a good sleep schedule?", count: 98 },
+      { question: "Is my baby's crying normal?", count: 87 },
+      { question: "When do babies start teething?", count: 76 },
+    ],
+  })
+  const [showNewMessageButton, setShowNewMessageButton] = useState(false)
+
   const messagesEndRef = useRef(null)
+  const chatContainerRef = useRef(null)
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    const el = chatContainerRef.current
+    if (el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+    }
   }
+
+  const isUserNearBottom = () => {
+    const el = chatContainerRef.current
+    if (el) {
+      const threshold = 100; 
+      return el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+    }
+    return true;
+  }
+
+  useEffect(() => {
+    if (messages.length === 0 || isUserNearBottom()) {
+      scrollToBottom();
+      setShowNewMessageButton(false);
+    } else {
+      setShowNewMessageButton(true);
+    }
+  }, [messages])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = chatContainerRef.current
+      if (!el) return
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 50
+      setShowNewMessageButton(!atBottom)
+    }
+
+    const el = chatContainerRef.current
+    el?.addEventListener("scroll", handleScroll)
+    return () => el?.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const handleSubmit = async (e = null, customInput = null) => {
     if (e) e.preventDefault()
     const finalInput = customInput !== null ? customInput : input
+
     if (!finalInput.trim()) return
 
-    const userMessage = {
+    const newMessage = {
       id: Date.now(),
       role: "user",
       content: finalInput,
       createdAt: new Date().toISOString(),
     }
 
-    const updatedMessages = [...messages, userMessage]
-    setMessages(updatedMessages)
+    setMessages((prevMessages) => [...prevMessages, newMessage])
     setInput("")
     setIsLoading(true)
 
     try {
       const res = await axios.post("/api/chat", {
-        messages: updatedMessages,
+        messages: [...messages, newMessage],
         role,
       })
-
-      setMessages([...updatedMessages, res.data])
+      setMessages((prevMessages) => [...prevMessages, res.data])
     } catch (err) {
-      console.error("Error:", err)
+      console.error("Error sending message:", err)
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: Date.now() + 1,
+          role: "system",
+          content: "Oops! Something went wrong. Please try again.",
+          createdAt: new Date().toISOString(),
+        },
+      ]);
     } finally {
       setIsLoading(false)
     }
   }
 
   const handleQuickQuestion = (question) => {
-    setInput("")
+    setInput(question)
     handleSubmit(null, question)
   }
 
-  const formatTime = (date) =>
-    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  const formatTime = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  }
 
-  useEffect(() => scrollToBottom(), [messages, isLoading]) // Added isLoading to dependency array
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      alert("Copied to clipboard!")
+    } catch (err) {
+      console.error("Copy failed:", err)
+      alert("Failed to copy!")
+    }
+  }
 
-  useEffect(() => {
-    setAnalytics({
-      totalChats: 1247,
-      totalMessages: 5832,
-      averageResponseTime: 1.2,
-      satisfactionRate: 94.5,
-      topQuestions: [
-        { question: "When should my baby start crawling?", count: 156 },
-        { question: "How do I introduce solid foods?", count: 134 },
-        { question: "What's a good sleep schedule?", count: 98 },
-        { question: "Is my baby's crying normal?", count: 87 },
-        { question: "When do babies start teething?", count: 76 },
-      ],
-    })
-  }, [])
-
-  return (
+return (
     <div className="min-h-screen bg-gray-50 p-6 space-y-10">
       <Card className="max-w-4xl mx-auto">
         <CardHeader className="flex justify-between items-center bg-pink-100 rounded-t-lg px-6 py-4">
@@ -145,7 +177,7 @@ export default function NeonestAi() {
           </TooltipProvider>
         </CardHeader>
 
-        <CardContent className="space-y-6 p-6">
+        <CardContent className="space-y-6 p-6 relative">
           {messages.length === 0 && (
             <div className="text-center space-y-4">
               <p className="text-sm text-gray-500 mt-2">
@@ -167,34 +199,85 @@ export default function NeonestAi() {
             </div>
           )}
 
-          <div className="space-y-4 max-h-[400px] overflow-y-auto">
+          <div
+            ref={chatContainerRef}
+            className="space-y-4 max-h-[600px] overflow-y-auto pr-2 pb-4"
+          >
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`flex mt-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex mt-3 group ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`rounded-xl px-4 py-2 max-w-[80%] ${
+                  className={`relative rounded-xl px-4 py-3 max-w-[80%] ${
                     m.role === "user"
                       ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
                       : "bg-gray-200 text-gray-800"
                   }`}
                 >
-                  <div className="prose prose-sm max-w-full text-sm">
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                  {/* Action icons for messages */}
+                  <div className={`absolute bottom-full mb-2 flex gap-1 bg-white p-1 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10
+                    ${m.role === "user" ? 'right-0' : 'left-0'}
+                  `}>
+                    {/* Copy button (for both user and AI messages) */}
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => copyToClipboard(m.content)}
+                          >
+                            <Copy className="w-4 h-4 text-gray-600" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Copy to clipboard</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>           
                   </div>
-                  <span className={`text-xs ${
-                    m.role === "user"
-                      ? "text-gray-300"
-                      : "text-pink-700"
-                  }`}>
-                    {formatTime(new Date(m.createdAt || Date.now()))}
+
+                  <div className="prose prose-sm max-w-full text-sm">
+                    <ReactMarkdown
+                      components={{
+                        h1: ({ node, ...props }) => (
+                          <h1 className={`text-2xl font-extrabold mb-2 mt-4 ${m.role === 'pediatrician' ? 'text-blue-700' : 'text-pink-600'}`} {...props} />
+                        ),
+                        h2: ({ node, ...props }) => (
+                          <h2 className={`text-xl font-semibold mb-2 mt-4 ${m.role === 'baby' ? 'text-purple-700' : 'text-blue-600'}`} {...props} />
+                        ),
+                        h3: ({ node, ...props }) => (
+                          <h3 className={`text-lg font-semibold mb-2 mt-4 ${m.role === 'nani' ? 'text-green-700' : 'text-pink-500'}`} {...props} />
+                        ),
+                        h4: ({ node, ...props }) => (
+                          <h4 className={`text-base font-semibold mb-2 mt-4 ${m.role === 'general' ? 'text-orange-700' : 'text-purple-500'}`} {...props} />
+                        ),
+                        p: ({ node, ...props }) => <p className="text-sm leading-relaxed mb-2" {...props} />,
+                        ul: ({ node, ...props }) => <ul className="list-disc list-inside text-sm mb-2" {...props} />,
+                        li: ({ node, ...props }) => <li className="ml-4 mb-1" {...props} />,
+                        strong: ({ node, ...props }) => <strong className="font-semibold" {...props} />,
+                        em: ({ node, ...props }) => <em className="italic" {...props} />,
+                        code: ({ node, ...props }) => <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono" {...props} />,
+                        blockquote: ({ node, ...props }) => (
+                          <blockquote className="border-l-4 border-pink-300 pl-4 italic text-sm text-gray-600 my-2" {...props} />
+                        ),
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
+                  </div>
+
+                  <span
+                    className={`text-xs block mt-1 ${
+                      m.role === "user" ? "text-gray-300" : "text-pink-700"
+                    }`}
+                  >
+                    {formatTime(m.createdAt)}
                   </span>
                 </div>
               </div>
             ))}
 
-            {/* NeoNest AI Thinking Indicator */}
             {isLoading && (
               <div className="flex justify-start mt-3">
                 <div className="rounded-xl px-4 py-2 max-w-[80%] bg-gray-200 text-gray-800 flex items-center gap-2">
@@ -206,23 +289,34 @@ export default function NeonestAi() {
             <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={handleSubmit} className="flex gap-2 mt-30">
+          {showNewMessageButton && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => {
+                  scrollToBottom()
+                  setShowNewMessageButton(false)
+                }}
+                className="text-sm text-white bg-pink-600 px-4 py-1 rounded-full shadow-md hover:bg-pink-700 transition"
+              >
+                ⬇ New Message
+              </button>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="flex gap-2 pt-4 items-center">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask me about baby care..."
               className="flex-1 border-pink-300"
+              disabled={isLoading}
             />
             <Button
               type="submit"
               disabled={isLoading || !input.trim()}
               className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
             >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </Button>
           </form>
         </CardContent>
