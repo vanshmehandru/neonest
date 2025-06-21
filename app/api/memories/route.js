@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-
-import cloudinary from "@/lib/cloudinary";
 import Memory from "@/app/models/Memory.model";
 import { authenticateToken } from "@/lib/auth";
 import connectDB from "@/lib/connectDB";
 import User from "@/app/models/User.model";
+import { cloudinary } from "@/lib/cloudinary";
 
 await connectDB();
 
@@ -14,7 +13,7 @@ export async function GET(request) {
     console.log(request.headers)
     const user = await authenticateToken(request);
     console.log(user)
-    const userId = user.user.id;
+    const userId = user?.user?.id;
     const privateMemories = await Memory.find({user : userId , isPublic: false});
     console.log(privateMemories);
     const publicMemories = await Memory.find({ isPublic: true })
@@ -30,39 +29,46 @@ export async function GET(request) {
     );
   }
 }
-
-// POST - Create new memory
 export async function POST(request) {
-  const formData = await request.formData();
-  const user = await authenticateToken(request);
-  const userId = user.user.id;
-
-  const file = formData.get("file");
-  const description = formData.get("description");
-  const isPublic = formData.get("isPublic") === "true";
-
-  if (!file) {
-    return NextResponse.json({ message: "No file uploaded" }, { status: 400 });
-  }
-
   try {
+    const formData = await request.formData();
+    console.log(formData);
+    const user = await authenticateToken(request);
+    const userId = user?.user?.id;
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const file = formData.get("file");
+    const title = formData.get("title") || "";
+    const description = formData.get("description") || "";
+    const isPublic = formData.get("isPublic") === "true";
+
+    if (!file) {
+      return NextResponse.json({ message: "No file uploaded" }, { status: 400 });
+    }
+
     // Convert file to buffer
     const buffer = await file.arrayBuffer();
     const bytes = Buffer.from(buffer);
 
     // Upload to Cloudinary
     const result = await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream({ resource_type: "auto" }, (error, result) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { resource_type: "auto" },
+        (error, result) => {
           if (error) reject(error);
           else resolve(result);
-        })
-        .end(bytes);
+        }
+      );
+      stream.end(bytes);
     });
 
-    // Create memory in database
+    // Create and save memory
     const newMemory = new Memory({
       user: userId,
+      title,
       description,
       isPublic,
       type: result.resource_type,
@@ -75,9 +81,9 @@ export async function POST(request) {
 
     return NextResponse.json(newMemory);
   } catch (err) {
-    console.error(err);
+    console.error("Memory upload error:", err);
     return NextResponse.json(
-      { message: "Error uploading memory" },
+      { message: "Error uploading memory", error: err.message },
       { status: 500 }
     );
   }

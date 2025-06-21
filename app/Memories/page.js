@@ -26,29 +26,33 @@ import Input from "../components/ui/Input";
 import Badge from "../components/ui/Badge";
 import { useAuth } from "../context/AuthContext";
 
+
 export default function MemoriesCommunityBlog() {
   const { token } = useAuth();
   const [memories, setMemories] = useState([]);
   const [isAddingMemory, setIsAddingMemory] = useState(false);
   const [editingMemory, setEditingMemory] = useState(null);
-  const [selectedMemory, setSelectedMemory] = useState(null); 
+  const [selectedMemory, setSelectedMemory] = useState(null);
   const [newMemory, setNewMemory] = useState({
     title: "",
     description: "",
-    type: "photo", 
-    file: null, 
+    type: "photo",
+    file: null,
     tags: "",
     isPublic: false,
-    isLiked: false, 
+    isLiked: false,
   });
   const [fileToUpload, setFileToUpload] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [publicMemories, setPublicMemories] = useState([]);
+  const [privateMemories, setPrivateMemories] = useState([]);
+
 
   useEffect(() => {
     document.title = "Memories, Community & Blogs | NeoNest";
     fetchMemories();
-  }, [token]); 
+  }, [token]);
 
   const fetchMemories = async () => {
     try {
@@ -57,10 +61,14 @@ export default function MemoriesCommunityBlog() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": 'multipart/form-data'
           },
         }
       );
-      setMemories(res.data.memories || []);
+      console.log(res);
+
+      setPublicMemories(res.data.publicMemories || []);
+      setPrivateMemories(res.data.privateMemories || []);
     } catch (err) {
       console.error("Failed to fetch memories:", err);
     }
@@ -102,7 +110,7 @@ export default function MemoriesCommunityBlog() {
     try {
       if (editingMemory) {
         await axios.put(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/memories/${editingMemory.id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/memories/${editingMemory._id}`,
           data,
           {
             headers: {
@@ -154,7 +162,7 @@ export default function MemoriesCommunityBlog() {
           },
         }
       );
-      fetchMemories(); 
+      fetchMemories();
     } catch (err) {
       console.error("Like toggle failed", err);
     }
@@ -176,9 +184,6 @@ export default function MemoriesCommunityBlog() {
     setPreviewFile(null);
   };
 
-  const publicMemories = memories.filter((memory) => memory.isPublic);
-  const privateMemories = memories.filter((memory) => !memory.isPublic);
-
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 py-8">
       {/* Page Header */}
@@ -192,7 +197,7 @@ export default function MemoriesCommunityBlog() {
         <Button
           onClick={() => {
             setIsAddingMemory(true);
-            setEditingMemory(null); 
+            setEditingMemory(null);
           }}
           className="mt-6 px-8 py-3 text-lg bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 shadow-lg transition-all duration-300 transform hover:scale-105"
         >
@@ -378,20 +383,24 @@ export default function MemoriesCommunityBlog() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {publicMemories.map((memory) => (
                 <div
-                  key={memory.id}
+                  key={memory._id}
                   className="group relative rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer"
                   onClick={() => setSelectedMemory(memory)}
                 >
+                  {/* Media Preview */}
                   <div className="aspect-square bg-gray-100 relative">
                     {memory.file ? (
                       memory.type === "video" ? (
-                        <div className="w-full h-full flex items-center justify-center bg-black/20">
-                          <Video className="w-16 h-16 text-white" />
-                        </div>
+                        <video
+                          src={memory.file}
+                          className="w-full h-full object-cover"
+                          muted
+                          preload="metadata"
+                        />
                       ) : (
                         <Image
                           src={memory.file}
-                          alt={memory.title || "Community Memory"}
+                          alt={memory.title || "Memory Image"}
                           fill
                           className="object-cover"
                         />
@@ -402,6 +411,8 @@ export default function MemoriesCommunityBlog() {
                       </div>
                     )}
                   </div>
+
+                  {/* Memory Info */}
                   <div className="p-4">
                     <h3 className="font-semibold text-lg line-clamp-1 text-gray-800 group-hover:text-blue-600 transition-colors">
                       {memory.title}
@@ -409,36 +420,62 @@ export default function MemoriesCommunityBlog() {
                     <p className="text-sm text-gray-600 line-clamp-2 mt-1 mb-3">
                       {memory.description}
                     </p>
+
+                    {/* Tags */}
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {Array.isArray(memory.tags) && memory.tags.map((tag, index) => (
-                        <Badge key={index} variant="outline" className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                        >
                           {tag}
                         </Badge>
                       ))}
                     </div>
+
+                    {/* Metadata Row */}
                     <div className="flex items-center justify-between text-sm text-gray-500 border-t pt-3 mt-3 border-gray-100">
-                      <span>{new Date(memory.date).toLocaleDateString('en-GB')}</span>
+                      <span>
+                        {(memory.createdAt).split('T')[0]}
+                      </span>
                       <div className="flex items-center gap-4">
+                        {/* Likes */}
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); 
-                            toggleLike(memory.id);
+                            e.stopPropagation();
+                            toggleLike(memory._id);
                           }}
-                          className={`flex items-center gap-1 transition-colors ${
-                            memory.isLiked ? "text-pink-600" : "hover:text-pink-600"
-                          }`}
+                          className={`flex items-center gap-1 transition-colors ${memory.likes?.includes(memory._id) ? "text-pink-600" : "hover:text-pink-600"
+                            }`}
                         >
-                          <Heart className="w-4 h-4" fill={memory.isLiked ? "currentColor" : "none"} />
-                          {memory.likes}
+                          <Heart
+                            className="w-4 h-4"
+                            fill={memory.likes?.includes(memory._id) ? "currentColor" : "none"}
+                          />
+                          {memory.likes?.length || 0}
                         </button>
+
+                        {/* Comments */}
                         <div className="flex items-center gap-1">
                           <MessageCircle className="w-4 h-4" />
                           {memory.comments?.length || 0}
                         </div>
                       </div>
                     </div>
+                    <div className="flex gap-2 mt-4">
+                      <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setEditingMemory(memory); setIsAddingMemory(true); }} className="flex-1 text-blue-600 border-blue-200 hover:bg-blue-50">
+                        <Edit className="w-4 h-4 mr-1" />
+                        Edit
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); deleteMemory(memory._id); }} className="text-red-600 border-red-200 hover:bg-red-50">
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 </div>
+
               ))}
             </div>
           ) : (
@@ -466,16 +503,20 @@ export default function MemoriesCommunityBlog() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {privateMemories.map((memory) => (
                 <div
-                  key={memory.id}
+                  key={memory._id}
                   className="group relative rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer"
                   onClick={() => setSelectedMemory(memory)}
                 >
+                  {/* Media */}
                   <div className="aspect-square bg-gray-100 relative">
                     {memory.file ? (
                       memory.type === "video" ? (
-                        <div className="w-full h-full flex items-center justify-center bg-black/20">
-                          <Video className="w-16 h-16 text-white" />
-                        </div>
+                        <video
+                          src={memory.file}
+                          className="w-full h-full object-cover"
+                          muted
+                          preload="metadata"
+                        />
                       ) : (
                         <Image
                           src={memory.file}
@@ -490,6 +531,8 @@ export default function MemoriesCommunityBlog() {
                       </div>
                     )}
                   </div>
+
+                  {/* Textual content */}
                   <div className="p-4">
                     <h3 className="font-semibold text-lg line-clamp-1 text-gray-800 group-hover:text-purple-600 transition-colors">
                       {memory.title}
@@ -497,40 +540,73 @@ export default function MemoriesCommunityBlog() {
                     <p className="text-sm text-gray-600 line-clamp-2 mt-1 mb-3">
                       {memory.description}
                     </p>
+
+                    {/* Tags */}
                     <div className="flex flex-wrap gap-1.5 mb-3">
-                      {Array.isArray(memory.tags) && memory.tags.map((tag, index) => (
-                        <Badge key={index} variant="outline" className="text-xs px-2 py-0.5 bg-purple-50 text-purple-700 border-purple-200">
-                          {tag}
-                        </Badge>
-                      ))}
+                      {Array.isArray(memory.tags) &&
+                        memory.tags.map((tag, index) => (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-xs px-2 py-0.5 bg-purple-50 text-purple-700 border-purple-200"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
                     </div>
+
+                    {/* Metadata */}
                     <div className="flex items-center justify-between text-sm text-gray-500 border-t pt-3 mt-3 border-gray-100">
-                      <span>{new Date(memory.date).toLocaleDateString('en-GB')}</span>
+                      <span>{new Date(memory.createdAt).toLocaleDateString("en-GB")}</span>
                       <div className="flex items-center gap-4">
+                        {/* Like */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            toggleLike(memory.id);
+                            toggleLike(memory._id);
                           }}
-                          className={`flex items-center gap-1 transition-colors ${
-                            memory.isLiked ? "text-pink-600" : "hover:text-pink-600"
-                          }`}
+                          className={`flex items-center gap-1 transition-colors ${memory.likes?.includes(memory?._id) ? "text-pink-600" : "hover:text-pink-600"
+                            }`}
                         >
-                          <Heart className="w-4 h-4" fill={memory.isLiked ? "currentColor" : "none"} />
-                          {memory.likes}
+                          <Heart
+                            className="w-4 h-4"
+                            fill={memory.likes?.includes(memory?._id) ? "currentColor" : "none"}
+                          />
+                          {memory.likes?.length || 0}
                         </button>
+
+                        {/* Comments */}
                         <div className="flex items-center gap-1">
                           <MessageCircle className="w-4 h-4" />
                           {memory.comments?.length || 0}
                         </div>
                       </div>
                     </div>
+
+                    {/* Edit/Delete buttons */}
                     <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setEditingMemory(memory); setIsAddingMemory(true); }} className="flex-1 text-blue-600 border-blue-200 hover:bg-blue-50">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingMemory(memory);
+                          setIsAddingMemory(true);
+                        }}
+                        className="flex-1 text-blue-600 border-blue-200 hover:bg-blue-50"
+                      >
                         <Edit className="w-4 h-4 mr-1" />
                         Edit
                       </Button>
-                      <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); deleteMemory(memory.id); }} className="text-red-600 border-red-200 hover:bg-red-50">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteMemory(memory._id);
+                        }}
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                      >
                         <Trash2 className="w-4 h-4 mr-1" />
                         Delete
                       </Button>
@@ -538,6 +614,7 @@ export default function MemoriesCommunityBlog() {
                   </div>
                 </div>
               ))}
+
             </div>
           ) : (
             <div className="text-center py-10 bg-gray-50 rounded-lg border border-gray-100">
@@ -593,9 +670,8 @@ export default function MemoriesCommunityBlog() {
                       e.stopPropagation();
                       toggleLike(selectedMemory.id);
                     }}
-                    className={`flex items-center gap-1 text-base transition-colors ${
-                      selectedMemory.isLiked ? "text-pink-600" : "hover:text-pink-600"
-                    }`}
+                    className={`flex items-center gap-1 text-base transition-colors ${selectedMemory.isLiked ? "text-pink-600" : "hover:text-pink-600"
+                      }`}
                   >
                     <Heart className="w-5 h-5" fill={selectedMemory.isLiked ? "currentColor" : "none"} />
                     {selectedMemory.likes}
