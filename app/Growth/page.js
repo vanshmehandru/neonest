@@ -119,7 +119,7 @@ export default function GrowthPage() {
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="container mx-auto p-4 space-y-6">
       <h2 className="text-3xl font-bold text-gray-800 ">Growth Tracker</h2>
       <p className="text-gray-600">Log your baby’s growth, track milestones, and visualize progress over time.</p>
 
