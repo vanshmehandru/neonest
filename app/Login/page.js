@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { Mail, Lock } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+
 
 export default function LoginPage() {
   useEffect(() => {
@@ -98,9 +100,7 @@ export default function LoginPage() {
       if (res.status === 200 && data.success) { 
         login(data.token);
 
-        const parentName = data.userExists?.name || "Parent"; 
-        sessionStorage.setItem('showWelcomeBackToast', 'true');
-        sessionStorage.setItem('parentName', parentName); 
+        toast.success(data.success);
 
         router.push("/"); 
       } else {
@@ -141,6 +141,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-4">
+      <ToastContainer/>
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"

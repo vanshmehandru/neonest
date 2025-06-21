@@ -1,13 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API });
+export async function POST(req) {
+  const { prompt } = await req.json();
 
-async function main() {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: "Explain how AI works in a few words",
-  });
-  console.log(response.text);
+  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API });
+
+  const result = await ai
+    .getGenerativeModel({ model: "gemini-1.5-flash" })
+    .generateContent(prompt);
+
+  const response = await result.response;
+  const text = response.text();
+
+  return Response.json({ text });
 }
-
-await main();
