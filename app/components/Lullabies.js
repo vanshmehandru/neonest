@@ -6,8 +6,9 @@ import { Music, Upload, Trash2, Timer, X, Play, Pause, Volume2 } from "lucide-re
 
 export default function LullabyModal({ show, onClose }) {
   const [lullabies, setLullabies] = useState([
-    { id: "1", title: "Twinkle Twinkle Little Star", src: "/audio/twinkle.mp3", isCustom: false },
-    { id: "2", title: "Brahms Lullaby", src: "/audio/brahms.mp3", isCustom: false }
+    { id: "1", title: "Twinkle Twinkle Little Star", src: "TwinkleTwinkle.mp3", isCustom: false },
+    { id: "2", title: "Chanda Hai Tu", src: "chandaHaiTu.mp3", isCustom: false },
+    { id: "3", title: "Lori Lori", src: "LoriLori.mp3", isCustom: false }
   ]);
 
   const [currentId, setCurrentId] = useState(null);
