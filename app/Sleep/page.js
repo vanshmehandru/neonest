@@ -21,7 +21,6 @@ export default function Page() {
   const [isAddingSchedule, setIsAddingSchedule] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const [newSchedule, setNewSchedule] = useState({
     time: "",
     type: "nap",
