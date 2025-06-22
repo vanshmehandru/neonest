@@ -81,7 +81,7 @@ NeoNest is a comprehensive web application built to reduce the physical, emotion
 
 ### DevOps & Deployment
 - **Frontend**: Vercel
-- **Backend/API**: Render
+- **Backend/API**: Vercel
 - **Version Control**: GitHub
 
 ---
