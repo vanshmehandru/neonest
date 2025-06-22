@@ -1,88 +1,144 @@
 # 👶 NeoNest – Your AI-Powered Baby Care Assistant
 
-NeoNest is a smart, centralized digital platform that supports new parents—especially first-timers—through their baby’s first year. It combines smart tracking, emotional support, and predictive care tools into a unified experience.
+NeoNest is a smart, centralized digital platform that supports new parents—especially first-timers—through their baby’s first year. It combines **predictive care**, **emotional comfort**, and **intelligent tracking** into a single unified experience.
 
-## 🚩 Problem Statement
+🔗 **Live Website**: https://neonest-henna.vercel.app/
 
-Many parents still rely on instinct, fragmented advice, and scattered tools to care for their newborns. This leads to confusion, burnout, and emotional exhaustion—especially during the critical first year, where 80% of brain development and habit formation takes place.
+
+---
+
+## 🚩 Problem We Addressed
+
+New parents often juggle sleepless nights, emotional stress, and confusing information scattered across dozens of apps. The lack of a **unified, intelligent system** increases cognitive load and puts both **parental mental health** and **infant care** at risk—especially during the crucial first year where over 80% of brain development and long-term habits are formed.
+
 
 ---
 
 ## 🌟 Solution Overview
 
-NeoNest is a comprehensive web application built to reduce the physical, emotional, and mental burden of baby care. It includes:
+**NeoNest** bridges this gap with an all-in-one AI-powered babycare assistant. From **feeding logs** to **vaccine reminders**, **milestone tracking**, and an **empathetic chatbot**, it helps parents stay organized, supported, and informed—without feeling overwhelmed.
 
-### 🍼 1. Feeding Tracker
-- Log feeding times (breast/formula)
-- Create daily/weekly feeding schedules
 
-### 😴 2. Sleep Tracker
-- Track nap and night sleep
-- Visualize patterns with charts
-- Get predictive suggestions
+---
 
-### 📈 3. Growth & Development
-- Compare growth with WHO standards
-- Log milestones month-wise
-- Activity suggestions for 0–1 year
+## 🔥 Features at a Glance
 
-### 💉 4. Medical & Vaccine Management
-- Track scheduled, upcoming, and overdue vaccines
-- Upload reports and store health contacts
+### 🍼 Feeding Tracker  
+- Log breast/formula feeds with time, amount, and notes  
+- Set personalized feeding schedules  
+- Track daily/weekly patterns for better routine building  
 
-### 📦 5. Essentials Tracker
-- Manage stock of baby essentials
-- Get low-stock alerts and suggestions
+### 😴 Sleep Tracker  
+- Record nap times and overnight sleep durations  
 
-### 📚 6. Parenting Resources
-- Curated guides and health articles
+### 📈 Growth & Development    
+- Track developmental milestones by month  
+- Suggest 0–1 year activities to support healthy growth   
 
-### ❓ 7. FAQs
-- Commonly asked questions with expert-backed answers
+### 💉 Medical & Vaccine Management  
+- Schedule and track vaccination dates  
+- Upload doctor reports and prescriptions  
+- Quick-access emergency contacts and health URLs  
+- Real-time overdue alerts  
 
-### 📸 8. Memory Vault & Blog Sharing
-- Store precious memories and milestones
-- Share publicly or keep private
+### 📦 Essentials Tracker  
+- Add/manage baby care items  
+- Categorized by daily, medical, hygiene, clothing, etc.  
+- Auto low-stock alerts + starter suggestions 
 
-### 🎵 9. Lullaby Module (in progress)
-- Play default lullabies or upload your own
+### 📚 Parenting Resources  
+- Curated articles by pediatricians and parenting experts  
+- Best practices, nutrition guides, safety checklists  
 
-### ⭐ 10. Reviews & Feedback
-- Rate features and share feedback
+### ❓ FAQs  
+- Common concerns addressed: rashes, fevers, feeding issues  
+- Answers verified by professionals or curated sources  
 
-### 🤖 11. NeoNest AI – Role-Based Chatbot
-- **Pediatrician Mode**: Health insights and symptoms
-- **Baby Mode**: Simulates baby needs
-- **Mother/Nani Mode**: Offers emotional support
+### 📸 Memory Vault & Blog Sharing  
+- Save baby’s firsts (smile, steps, words), share your experiences and view others'.  
+- Option to write private or public blog-style memory entries  
+- Personalized journal and photo archive  
 
-### 🏠 12. Homepage Overview
-- Clean hub to access all modules and stay updated
+### 🎵 Lullaby Module  
+- Default library of soft lullabies  
+- Access to users to upload their own lullabies  
+- Built-in sleep timer  
+
+### ⭐ Reviews & Feedback  
+- Rate and react to features (Helpful / Not Helpful)  
+- Popular keywords like “life saver”, “easy to use” highlighted 
+- Logged-in users prompted to leave reviews every 15 days  
+
+### 🤖 NeoNest AI – Role-Based Chatbot  
+- **🧑‍⚕ Pediatrician Mode**: Baby health insights and early symptom explanations  
+- **🍼 Baby Mode**: Interprets needs from baby’s perspective   
+- **👵 Nani/Mother Mode**: Offers comfort, guidance, and traditional wisdom
+  
 
 ---
 
 ## 🛠 Tech Stack
 
-### Frontend
-- **Next.js** – React framework for SSR
-- **Tailwind CSS** – Utility-first styling
-- **Lucide React** – Icon set
-- **Recharts** – Charts and graphs
-- **date-fns** – Date utilities
+### 💻 Frontend  
+- **Next.js** – Server-side rendering + fast routing  
+- **Tailwind CSS** – Responsive, scalable utility styling  
+- **Lucide React** – Icon system   
 
-### Backend
-- **Express.js** + **Node.js**
-- **MongoDB** – NoSQL database
+### ⚙ Backend  
+- **Node.js** + **Express.js** – API and routing  
+- **MongoDB** – Store user data 
 
-### Auth & Security
-- **JWT** + **bcryptjs** – Token-based authentication and password encryption
+### 🔐 Authentication & Security  
+- **JWT** – Session handling and route protection  
+- **bcryptjs** – Secure password hashing  
 
-### AI Integration
-- **Gemini API** – Empathetic chatbot and AI modules
+### 🧠 AI Integration  
+- **Google Gemini API** – Chatbot, lullaby generator, feedback analyzer  
 
-### DevOps & Deployment
-- **Frontend**: Vercel
-- **Backend/API**: Vercel
+### 🚀 Deployment  
+- Vercel  
 - **Version Control**: GitHub
+  
 
 ---
+
+## 🧑‍💻 How to Run NeoNest Locally
+
+Follow these steps to get NeoNest up and running on your local machine:
+
+### 1. 📦 Clone the Repository
+
+```bash
+git clone https://github.com/AditiGupta-tech/neonest
+cd neonest
+```
+
+### 2. 🧰 Install Dependencies
+```npm install```
+
+### 3. 🧰 Install 'pnpm' (optional).
+```npm install pnpm -g```
+
+### 4. 🧪 Create Environment Variables
+.env:
+```
+GEMINI_API_KEY=your_gemini_api_key
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+```
+
+### 5. ▶ Run the Application
+```
+npm run dev
+#or
+pnpm run dev
+```
+
+
+
+**We built NeoNest with love and care, just like how every parent raises their child. We are glad you took time to visit our site.
+-Team NeoNest❤️**
+
+
+
 
