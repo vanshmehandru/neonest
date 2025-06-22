@@ -42,6 +42,7 @@ export async function POST(req) {
     return Response.json(
       {
         success: "Feed added successfully!",
+        feed : newFeed
       },
       { status: 201 }
     );

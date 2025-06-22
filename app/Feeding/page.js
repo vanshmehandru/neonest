@@ -63,6 +63,7 @@ export default function Page() {
         }
       );
 
+      console.log(res.data)
       if (res.data.feed) {
         setSchedules((prev) => [...prev, res.data.feed]);
       }

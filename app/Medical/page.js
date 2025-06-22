@@ -83,7 +83,7 @@ export default function VaccineTracker({ babyId }) {
   useEffect(() => {
     document.title = "Medical | NeoNest"
     fetchVaccines()
-    fetchBabyBirthDate() 
+    // fetchBabyBirthDate() 
   }, [])
 
   const fetchVaccines = async () => {
@@ -98,19 +98,19 @@ export default function VaccineTracker({ babyId }) {
     }
   }
 
-  const fetchBabyBirthDate = async () => {
-    try {
-      const token = getAuthToken()
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/baby/${babyId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (res.data && res.data.birthDate) {
-        setBabyBirthDate(res.data.birthDate.split("T")[0]) 
-      }
-    } catch (error) {
-      console.error("Error fetching baby birth date:", error)
-    }
-  }
+  // const fetchBabyBirthDate = async () => {
+  //   try {
+  //     const token = getAuthToken()
+  //     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/baby/${babyId}`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     if (res.data && res.data.birthDate) {
+  //       setBabyBirthDate(res.data.birthDate.split("T")[0]) 
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching baby birth date:", error)
+  //   }
+  // }
 
   const initializeStandardSchedule = async () => {
     if (!babyBirthDate) return; 

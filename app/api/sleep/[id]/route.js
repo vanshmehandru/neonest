@@ -3,14 +3,16 @@ import connectDB from '@/lib/connectDB';
 import Sleep from '@/app/models/Sleep.model';
 import { authenticateToken } from '@/lib/auth';
 
-export async function PATCH(req, { params }) {
+export async function PATCH(req, context) {
   try {
     await connectDB();
     const user = await authenticateToken(req);
     const data = await req.json();
+    const params = await context.params;
+    console.log(params)
 
     const updated = await Sleep.findOneAndUpdate(
-      { _id: params.id, user: user.user.id },
+      { _id: params.id, userId: user.user.id },
       data,
       { new: true }
     );
@@ -18,6 +20,7 @@ export async function PATCH(req, { params }) {
     if (!updated) throw new Error("Sleep log not found or unauthorized");
     return NextResponse.json(updated);
   } catch (err) {
+    console.log(err);
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 }
