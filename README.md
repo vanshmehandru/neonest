@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 👶 NeoNest – Your AI-Powered Baby Care Assistant
 
-## Getting Started
+NeoNest is a smart, centralized digital platform that supports new parents—especially first-timers—through their baby’s first year. It combines smart tracking, emotional support, and predictive care tools into a unified experience.
 
-First, run the development server:
+## 🚩 Problem Statement
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Many parents still rely on instinct, fragmented advice, and scattered tools to care for their newborns. This leads to confusion, burnout, and emotional exhaustion—especially during the critical first year, where 80% of brain development and habit formation takes place.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🌟 Solution Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NeoNest is a comprehensive web application built to reduce the physical, emotional, and mental burden of baby care. It includes:
 
-## Learn More
+### 🍼 1. Feeding Tracker
+- Log feeding times (breast/formula)
+- Create daily/weekly feeding schedules
 
-To learn more about Next.js, take a look at the following resources:
+### 😴 2. Sleep Tracker
+- Track nap and night sleep
+- Visualize patterns with charts
+- Get predictive suggestions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📈 3. Growth & Development
+- Compare growth with WHO standards
+- Log milestones month-wise
+- Activity suggestions for 0–1 year
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 💉 4. Medical & Vaccine Management
+- Track scheduled, upcoming, and overdue vaccines
+- Upload reports and store health contacts
 
-## Deploy on Vercel
+### 📦 5. Essentials Tracker
+- Manage stock of baby essentials
+- Get low-stock alerts and suggestions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 📚 6. Parenting Resources
+- Curated guides and health articles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### ❓ 7. FAQs
+- Commonly asked questions with expert-backed answers
+
+### 📸 8. Memory Vault & Blog Sharing
+- Store precious memories and milestones
+- Share publicly or keep private
+
+### 🎵 9. Lullaby Module (in progress)
+- Play default lullabies or upload your own
+
+### ⭐ 10. Reviews & Feedback
+- Rate features and share feedback
+
+### 🤖 11. NeoNest AI – Role-Based Chatbot
+- **Pediatrician Mode**: Health insights and symptoms
+- **Baby Mode**: Simulates baby needs
+- **Mother/Nani Mode**: Offers emotional support
+
+### 🏠 12. Homepage Overview
+- Clean hub to access all modules and stay updated
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- **Next.js** – React framework for SSR
+- **Tailwind CSS** – Utility-first styling
+- **Lucide React** – Icon set
+- **Recharts** – Charts and graphs
+- **date-fns** – Date utilities
+
+### Backend
+- **Express.js** + **Node.js**
+- **MongoDB** – NoSQL database
+
+### Auth & Security
+- **JWT** + **bcryptjs** – Token-based authentication and password encryption
+
+### AI Integration
+- **Gemini API** – Empathetic chatbot and AI modules
+
+### DevOps & Deployment
+- **Frontend**: Vercel
+- **Backend/API**: Render
+- **Version Control**: GitHub
+
+---
+
