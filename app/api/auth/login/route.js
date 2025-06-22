@@ -2,8 +2,9 @@ import User from "@/app/models/User.model";
 import connectDB from "@/lib/connectDB";
 import bcryptjs from "bcryptjs";
 import jwt from 'jsonwebtoken'
-await connectDB();
+
 export async function POST(req) {
+  await connectDB();
   try {
     const body = await req.json();
     const { email, password } = body;
