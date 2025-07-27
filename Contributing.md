@@ -82,7 +82,7 @@ Before you get started, please read through this document to understand the cont
 | Medium     | intermediate / medium  | 8      |
 | Hard       | hard                   | 10     |
 
-> Points may contribute to GSSoC or community leaderboard recognition.
+> 🏆 These points count toward your GSSoC'25 score and may boost your standing on the community leaderboard.
 
 ---
 
