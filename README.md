@@ -2,7 +2,7 @@
 
 NeoNest is a smart, centralized digital platform that supports new parents—especially first-timers—through their baby’s first year. It combines **predictive care**, **emotional comfort**, and **intelligent tracking** into a single unified experience.
 
-🔗 **Live Website**: https://neonest-henna.vercel.app/
+🔗 **Live Website**: https://neonest-babycare.vercel.app/
 
 
 ---
