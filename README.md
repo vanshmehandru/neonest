@@ -85,7 +85,7 @@ New parents often juggle sleepless nights, emotional stress, and confusing infor
 - **Lucide React** – Icon system   
 
 ### ⚙ Backend  
-- **Node.js** + **Express.js** – API and routing  
+- **Next.js** – API and routing  
 - **MongoDB** – Store user data 
 
 ### 🔐 Authentication & Security  
@@ -113,10 +113,10 @@ git clone https://github.com/AditiGupta-tech/neonest
 cd neonest
 ```
 
-### 2. 🧰 Install Dependencies
+### 2. 💼 Install Dependencies
 ```npm install```
 
-### 3. 🧰 Install 'pnpm' (optional).
+### 3. 🧰 Install 'pnpm' (optional to install globally).
 ```npm install pnpm -g```
 
 ### 4. 🧪 Create Environment Variables
