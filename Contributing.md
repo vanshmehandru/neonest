@@ -76,11 +76,12 @@ Before you get started, please read through this document to understand the cont
 
 ## 🎯 Points & Difficulty Levels
 
-| Difficulty | Label                  | Points |
-|------------|------------------------|--------|
-| Easy       | good-first-issue       | 5      |
-| Medium     | intermediate / medium  | 8      |
-| Hard       | hard                   | 10     |
+| Difficulty | Points |
+|------------|--------|
+| Level 1    |   3    |
+| Level 2    |   7    |
+| Level 3    |  10    |
+
 
 > 🏆 These points count toward your GSSoC'25 score and may boost your standing on the community leaderboard.
 
