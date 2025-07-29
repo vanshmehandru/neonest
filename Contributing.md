@@ -44,7 +44,7 @@ Here’s a quick overview of the contribution flow:
 
 2. Clone your fork:
  ```bash
- git clone git clone https://github.com/AditiGupta-tech/NeoNest.git
+ git clone https://github.com/AditiGupta-tech/NeoNest.git
  ```
 
 3. **Create a new branch:**
