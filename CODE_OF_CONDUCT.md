@@ -38,7 +38,16 @@ This Code of Conduct applies across all GSSoC community spaces — including Git
 
 ## 📋 Pull Request Guidelines
 
-All contributions must align with this Code of Conduct. PRs containing inappropriate behavior, language, or content may be rejected. Further enforcement may follow as outlined below.
+📌 Contribution Behavior
+
+All contributions, including Pull Requests, are expected to align with this Code of Conduct. Contributors should:
+
+- 🗣 Use respectful and inclusive language in comments, commit messages, and discussions.
+- 🚫 Avoid introducing content or changes that may be offensive, discriminatory, or insensitive.
+- 🤝 Accept review feedback gracefully, and provide constructive responses during code review or issue discussions.
+- 🧘‍♀ Remain calm and civil when resolving conflicts or differing technical opinions.
+
+Contributions that violate these expectations may be rejected or flagged for further enforcement as outlined below.
 
 ---
 
@@ -93,6 +102,11 @@ GSSoC community leaders will follow these guidelines when determining the conseq
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html), version 2.0.
 
 Enforcement guidelines inspired by [Mozilla’s code of conduct enforcement ladder](https://github.com/mozilla/diversity).
+
+---
+
+## 📘 Further Reading
+For contribution workflow, coding standards, and how to get started, please refer to our CONTRIBUTING.md guide.
 
 ---
 
