@@ -36,9 +36,7 @@ This Code of Conduct applies across all GSSoC community spaces — including Git
 
 ---
 
-## 📋 Pull Request Guidelines
-
-📌 Contribution Behavior
+## 📌 Contribution Behavior
 
 All contributions, including Pull Requests, are expected to align with this Code of Conduct. Contributors should:
 
@@ -48,6 +46,7 @@ All contributions, including Pull Requests, are expected to align with this Code
 - 🧘‍♀ Remain calm and civil when resolving conflicts or differing technical opinions.
 
 Contributions that violate these expectations may be rejected or flagged for further enforcement as outlined below.
+For contribution workflow, coding standards, and how to get started, please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
